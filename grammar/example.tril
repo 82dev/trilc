@@ -1,0 +1,9 @@
+// Prints Hello World
+{
+    use System;
+
+    null main(string[] cmdargs){
+        Output console = Output.Console;
+        console.Write("Hello World");
+    }
+}
