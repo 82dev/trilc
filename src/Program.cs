@@ -6,7 +6,9 @@ namespace TrilComp
     {
         static void Main(string[] args)
         {
-            
+            Lexer lexer = new Lexer();
+
+            lexer.lex(new string[]{"{", "a+ 11", "}"});
         }
     }
 }

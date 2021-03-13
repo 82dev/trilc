@@ -2,7 +2,7 @@
 {
     use System;
 
-    null main(string[] cmdargs){
+    null main([string] cmdargs){
         Output console = Output.Console;
         console.Write("Hello World");
     }
