@@ -9,10 +9,12 @@ namespace TrilComp
 {
     enum TokenType
     {
+        EOF,
+        CONST,
         BlockStart,
         BlockEnd,
-        Indentifier,
-        Number,
+        ID,
+        NUM,
         Plus,
         Inc,
         Minus,

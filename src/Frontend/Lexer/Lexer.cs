@@ -11,8 +11,8 @@ namespace TrilComp
     class Lexer
     {
         private List<Token> tokens = new List<Token>();
-
         string seps = " =+\\-*!{}[]().";
+        string[] consts = new string[]{"null","string","int"};
 
         public Lexer(){}
 
@@ -38,14 +38,19 @@ namespace TrilComp
                             default:
                                 string temp = token;
                                 if(temp.isNumber()){
-                                    tokens.Add(new Token(TokenType.Number, token));
+                                    addToken(TokenType.NUM, token);
                                     break;
                                 }
                                 
                                 if(!(string.IsNullOrEmpty(token)) ||
                                    !(string.IsNullOrWhiteSpace(token))){
 
-                                    tokens.Add(new Token(TokenType.Indentifier, token));
+                                    if(consts.Contains(token)){
+                                        addToken(TokenType.CONST, token);
+                                        break;
+                                    }
+
+                                    addToken(TokenType.ID, token);
                                 }
 
                                 break;
@@ -56,44 +61,44 @@ namespace TrilComp
                     switch (input[i])
                     {
                         case '{': 
-                            tokens.Add(new Token(TokenType.BlockStart));
+                            addToken(TokenType.BlockStart);
                             break;
                         case '}': 
-                            tokens.Add(new Token(TokenType.BlockEnd));
+                            addToken(TokenType.BlockEnd);
                             break;
                         case '+': 
                             if(peek(1) == '+'){
                                 i++;
-                                tokens.Add(new Token(TokenType.Inc));
+                                addToken(TokenType.Inc);
                                 break;
                             }
-                            tokens.Add(new Token(TokenType.Plus));
+                            addToken(TokenType.Plus);
                             break;
                         case '-': 
                             if(peek(1) == '-'){
                                 i++;
-                                tokens.Add(new Token(TokenType.Decrease));
+                                addToken(TokenType.Decrease);
                                 break;
                             }
-                            tokens.Add(new Token(TokenType.Minus));
+                            addToken(TokenType.Minus);
                             break;
                         case '.': 
                             if(peek(1) == '.'){
                                 i++;
-                                tokens.Add(new Token(TokenType.LineCom));
+                                addToken(TokenType.LineCom);
                                 break;
                             }
                             if(peek(1) == '['){
                                 i++;
-                                tokens.Add(new Token(TokenType.ComStart));
+                                addToken(TokenType.ComStart);
                                 break;
                             }
-                            tokens.Add(new Token(TokenType.Dot));
+                            addToken(TokenType.Dot);
                             break;
                         case ']': 
                             if(peek(1) == '.'){
                                 i++;
-                                tokens.Add(new Token(TokenType.ComEnd));
+                                addToken(TokenType.ComEnd);
                                 break;
                             }
                             break;
@@ -108,7 +113,15 @@ namespace TrilComp
             {
                 this.lex(input[i] + " ");
             }
+            addToken(TokenType.EOF);
             return tokens.ToArray();
+        }
+
+        private void addToken(TokenType tokenType, string v){
+            tokens.Add(new Token(tokenType, v));
+        }
+        private void addToken(TokenType tokenType){
+            tokens.Add(new Token(tokenType));
         }
 
     }
