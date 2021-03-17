@@ -15,5 +15,11 @@ namespace TrilComp
         Number,
         Plus,
         Inc,
+        Minus,
+        Decrease,
+        LineCom,
+        ComStart,
+        ComEnd,
+        Dot,
     }
 }

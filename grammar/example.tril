@@ -1,7 +1,12 @@
-// Prints Hello World
+..Prints Hello World
+--
+-
 {
     use System;
 
+    .[
+        Floating Ambigious entry point
+    ].
     null main([string] cmdargs){
         Output console = Output.Console;
         console.Write("Hello World");

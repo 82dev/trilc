@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace TrilComp
     {
         private List<Token> tokens = new List<Token>();
 
-        string seps = " =+\\-*!{}[]()";
+        string seps = " =+\\-*!{}[]().";
 
         public Lexer(){}
 
@@ -69,6 +68,34 @@ namespace TrilComp
                                 break;
                             }
                             tokens.Add(new Token(TokenType.Plus));
+                            break;
+                        case '-': 
+                            if(peek(1) == '-'){
+                                i++;
+                                tokens.Add(new Token(TokenType.Decrease));
+                                break;
+                            }
+                            tokens.Add(new Token(TokenType.Minus));
+                            break;
+                        case '.': 
+                            if(peek(1) == '.'){
+                                i++;
+                                tokens.Add(new Token(TokenType.LineCom));
+                                break;
+                            }
+                            if(peek(1) == '['){
+                                i++;
+                                tokens.Add(new Token(TokenType.ComStart));
+                                break;
+                            }
+                            tokens.Add(new Token(TokenType.Dot));
+                            break;
+                        case ']': 
+                            if(peek(1) == '.'){
+                                i++;
+                                tokens.Add(new Token(TokenType.ComEnd));
+                                break;
+                            }
                             break;
                         default:break;
                     }
