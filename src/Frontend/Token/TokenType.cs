@@ -13,6 +13,7 @@ namespace TrilComp
         BlockEnd,
         Indentifier,
         Number,
-        
+        Plus,
+        Inc,
     }
 }

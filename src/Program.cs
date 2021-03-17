@@ -8,7 +8,7 @@ namespace TrilComp
         {
             Lexer lexer = new Lexer();
 
-            lexer.lex(new string[]{"{", "a+ 11", "}"});
+            lexer.lex(new string[]{"{", "a++11", "}"});
         }
     }
 }

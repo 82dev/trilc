@@ -22,6 +22,12 @@ namespace TrilComp
             string token = string.Empty;
             for (int i = 0; i < input.Length; i++)
             {
+                char peek(int j){
+                    int t = i; 
+                    t+=j; 
+                    return input[t];
+                }
+
                 if(!seps.Contains(input[i]))
                 {
                     token += input[i];
@@ -34,7 +40,15 @@ namespace TrilComp
                                 string temp = token;
                                 if(temp.isNumber()){
                                     tokens.Add(new Token(TokenType.Number, token));
+                                    break;
                                 }
+                                
+                                if(!(string.IsNullOrEmpty(token)) ||
+                                   !(string.IsNullOrWhiteSpace(token))){
+
+                                    tokens.Add(new Token(TokenType.Indentifier, token));
+                                }
+
                                 break;
                         }
                         token = string.Empty;
@@ -47,6 +61,14 @@ namespace TrilComp
                             break;
                         case '}': 
                             tokens.Add(new Token(TokenType.BlockEnd));
+                            break;
+                        case '+': 
+                            if(peek(1) == '+'){
+                                i++;
+                                tokens.Add(new Token(TokenType.Inc));
+                                break;
+                            }
+                            tokens.Add(new Token(TokenType.Plus));
                             break;
                         default:break;
                     }
