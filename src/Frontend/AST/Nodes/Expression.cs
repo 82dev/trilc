@@ -1,25 +1,19 @@
 namespace TrilComp
 {
-    public enum Operand{
-        Add,
-        Sub,
-        Mul,
-        Div,
-    }
-
     class Expression:Node
     {
         bool single;
         public string value;
-        Operand operand;
+        Operation operation;
         Expression lNode;
         Expression rNode;
 
-        public Expression(Expression l, Expression r, Operand o)
+        public Expression(Expression l, Expression r, Operation o)
         {
             lNode = l;
             rNode = r;
-            operand = o;
+            operation = o;
+            calcValue();
         }
 
         private Expression(string v){
@@ -27,22 +21,18 @@ namespace TrilComp
             single = true;
         }
 
-        public Expression(Expression l, Expression r)
-        {
-            lNode = l;
-            rNode = r;
-            calcValue();
-        }
-
-        public Expression(int l, int r)
+        public Expression(int l, int r, Operation o)
         {
             lNode = new Expression(l.ToString());
             rNode = new Expression(r.ToString());
+            operation = o;
             calcValue();
         }
 
         public Expression calcValue(){
-            value = (int.Parse(lNode.value) + int.Parse(rNode.value)).ToString();
+            if(single != true){
+                value = operation.calcValue(int.Parse(lNode.value), int.Parse(rNode.value));
+            }
             return this;
         }
     }

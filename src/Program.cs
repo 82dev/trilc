@@ -11,6 +11,8 @@ namespace TrilComp
     {
         static void Main(string[] args)
         {
+            Add add = new Add();
+
             // string[] input = File.ReadAllLines(Path.Join(Environment.CurrentDirectory, 
             //     @""))
 
@@ -27,7 +29,7 @@ namespace TrilComp
             //     Console.Write("\n");
             // }
 
-            Expression exp = new Expression(new Expression(2, 3), new Expression(12, 3));
+            Expression exp = new Expression(new Expression(2, 3, add), new Expression(12, 3, add), add);
 
             Console.WriteLine(exp.value);
 
