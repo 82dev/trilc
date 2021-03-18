@@ -11,7 +11,18 @@ namespace TrilComp
     class Lexer
     {
         private List<Token> tokens = new List<Token>();
-        string seps = " =+\\-*!{}[]().";
+
+        private Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
+            {'{', TokenType.BlockStart},
+            {'}', TokenType.BlockEnd},
+            {'[', TokenType.ArrSta},
+            {']', TokenType.ArrEnd},
+            {'(', TokenType.ParSta},
+            {')', TokenType.ParEnd},
+            {';', TokenType.SemiColon},
+        };
+
+        string seps = " =+\\-*!{}[]().;";
         string[] consts = new string[]{"null","string","int"};
 
         public Lexer(){}
@@ -60,12 +71,6 @@ namespace TrilComp
 
                     switch (input[i])
                     {
-                        case '{': 
-                            addToken(TokenType.BlockStart);
-                            break;
-                        case '}': 
-                            addToken(TokenType.BlockEnd);
-                            break;
                         case '+': 
                             if(peek(1) == '+'){
                                 i++;
@@ -101,8 +106,13 @@ namespace TrilComp
                                 addToken(TokenType.ComEnd);
                                 break;
                             }
+                            addToken(TokenType.ArrEnd);
                             break;
-                        default:break;
+                        default:
+                            if(charTokenDict.ContainsKey(input[i])){
+                                addToken(charTokenDict[input[i]]);
+                            }
+                            break;
                     }
                 }
             }

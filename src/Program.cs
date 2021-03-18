@@ -18,7 +18,16 @@ namespace TrilComp
             path = Path.Combine(Environment.CurrentDirectory, @"test.tril");
 
             Lexer lexer = new Lexer();
-            lexer.lex(File.ReadAllLines(path));
+            
+            foreach(var item in lexer.lex(File.ReadAllLines(path))){
+                Console.Write("Type: " + item.tokenType);
+                if(!string.IsNullOrEmpty(item.value)){
+                    Console.Write(" Value: " + item.value);
+                }
+                Console.Write("\n");
+            }
+
+            Console.ReadLine();
         }
     }
 }

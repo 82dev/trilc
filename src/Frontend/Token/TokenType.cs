@@ -22,6 +22,11 @@ namespace TrilComp
         LineCom,
         ComStart,
         ComEnd,
+        SemiColon,
         Dot,
+        ArrSta,
+        ArrEnd,
+        ParSta,
+        ParEnd,
     }
 }
