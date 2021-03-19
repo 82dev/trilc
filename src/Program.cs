@@ -3,7 +3,8 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace TrilComp
 {
@@ -12,14 +13,15 @@ namespace TrilComp
         static void Main(string[] args)
         {
             Add add = new Add();
-
-            // string[] input = File.ReadAllLines(Path.Join(Environment.CurrentDirectory, 
-            //     @""))
+            Sub sub = new Sub();
+            Mul mul = new Mul();
+            Div div = new Div();
 
             string path = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).ToString(), @"grammar\example.tril");
             path = Path.Combine(Environment.CurrentDirectory, @"test.tril");
 
             Lexer lexer = new Lexer();
+            lexer.lex(File.ReadAllLines(path));
 
             // foreach(var item in lexer.lex(File.ReadAllLines(path))){
             //     Console.Write("Type: " + item.tokenType);
@@ -29,9 +31,14 @@ namespace TrilComp
             //     Console.Write("\n");
             // }
 
-            Expression exp = new Expression(new Expression(2, 3, add), new Expression(12, 3, add), add);
-
-            Console.WriteLine(exp.value);
+            if(args[0] != null){
+                var jsonS = File.ReadAllText(args[0]);
+                var options = new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true,
+                };
+                TrilMetaData e = JsonSerializer.Deserialize<TrilMetaData>("\"entryfile\":\"program\",\"entryclass\":\"none\"", options);
+            }
 
             Console.ReadLine();
         }

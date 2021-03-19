@@ -1,0 +1,8 @@
+{
+    use System;
+
+    null main([string] cmdargs){
+        Output console = Output.Console;
+        console.WriteLine("Hello World from Tril!");
+    }
+}

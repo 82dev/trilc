@@ -23,7 +23,7 @@ namespace TrilComp
         };
 
         string seps = " =+\\-*!{}[]().;";
-        string[] consts = new string[]{"null","string","int"};
+        string[] keywords = new string[]{"null","string","int", "bool"};
 
         public Lexer(){}
 
@@ -56,8 +56,8 @@ namespace TrilComp
                                 if(!(string.IsNullOrEmpty(token)) ||
                                    !(string.IsNullOrWhiteSpace(token))){
 
-                                    if(consts.Contains(token)){
-                                        addToken(TokenType.CONST, token);
+                                    if(keywords.Contains(token)){
+                                        addToken(TokenType.Keyword, token);
                                         break;
                                     }
 
@@ -108,6 +108,23 @@ namespace TrilComp
                             }
                             addToken(TokenType.ArrEnd);
                             break;
+                        case '=':
+                            if(peek(1) == '='){
+                                i++;
+                                addToken(TokenType.Equal);
+                                break;
+                            }
+                            addToken(TokenType.Assignment);
+                            break;
+                        case '!':
+                            if(peek(1) == '='){
+                                i++;
+                                addToken(TokenType.NotEqual);
+                                break;
+                            }
+                            addToken(TokenType.Not);
+                            break;
+                        
                         default:
                             if(charTokenDict.ContainsKey(input[i])){
                                 addToken(charTokenDict[input[i]]);

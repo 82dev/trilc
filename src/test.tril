@@ -4,6 +4,6 @@
     ].
 
     null main([string] cmdargs){
-        int i;
+        bool i;
     }
 }

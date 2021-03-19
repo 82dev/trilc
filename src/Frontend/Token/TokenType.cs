@@ -10,7 +10,7 @@ namespace TrilComp
     enum TokenType
     {
         EOF,
-        CONST,
+        Keyword,
         BlockStart,
         BlockEnd,
         ID,
@@ -22,6 +22,10 @@ namespace TrilComp
         LineCom,
         ComStart,
         ComEnd,
+        Assignment,
+        Equal,
+        NotEqual,
+        Not,
         SemiColon,
         Dot,
         ArrSta,
