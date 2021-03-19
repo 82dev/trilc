@@ -3,8 +3,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace TrilComp
 {
@@ -32,12 +31,8 @@ namespace TrilComp
             // }
 
             if(args[0] != null){
-                var jsonS = File.ReadAllText(args[0]);
-                var options = new JsonSerializerOptions
-                {
-                    IgnoreNullValues = true,
-                };
-                TrilMetaData e = JsonSerializer.Deserialize<TrilMetaData>("\"entryfile\":\"program\",\"entryclass\":\"none\"", options);
+                string json = File.ReadAllText(args[0]);
+                Dictionary<string, string> metadata = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             }
 
             Console.ReadLine();

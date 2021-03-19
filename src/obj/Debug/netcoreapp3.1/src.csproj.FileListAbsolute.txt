@@ -11,3 +11,5 @@ C:\Users\Rishabh Shah\Desktop\codeProjects\trilc\src\obj\Debug\netcoreapp3.1\src
 C:\Users\Rishabh Shah\Desktop\codeProjects\trilc\src\obj\Debug\netcoreapp3.1\src.dll
 C:\Users\Rishabh Shah\Desktop\codeProjects\trilc\src\obj\Debug\netcoreapp3.1\src.pdb
 C:\Users\Rishabh Shah\Desktop\codeProjects\trilc\src\obj\Debug\netcoreapp3.1\src.genruntimeconfig.cache
+C:\Users\Rishabh Shah\Desktop\codeProjects\trilc\src\obj\Debug\netcoreapp3.1\src.csproj.CopyComplete
+C:\Users\Rishabh Shah\Desktop\codeProjects\trilc\src\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll

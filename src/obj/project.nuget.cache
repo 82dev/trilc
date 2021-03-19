@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "VBui1CqHlrZqNCv8joiX2cvUNxsa8OMTiZoLifhw1p0/rV+wgZE/ZValwk8LHheR4jfzFEJImqC/J5hbkQjZCQ==",
+  "dgSpecHash": "raL7nVNs309n4yD9wx4SYYdaljy1FMgxYaVz/3vw+aNJ23pJpqUg8EYprBTwRkpbX2iHm4YEEwJZcFhQC+YgiQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\src.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Rishabh Shah\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
