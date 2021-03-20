@@ -1,5 +1,7 @@
+..hello hi nice
 {
     use System;
+    ..nice
 
     null main([string] cmdargs){
         Output console = Output.Console;

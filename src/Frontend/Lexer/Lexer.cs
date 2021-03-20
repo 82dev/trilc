@@ -11,7 +11,6 @@ namespace trilc
     class Lexer
     {
         private List<Token> tokens = new List<Token>();
-
         private Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
             {'{', TokenType.BlockStart},
             {'}', TokenType.BlockEnd},
@@ -30,13 +29,15 @@ namespace trilc
         private void lex(string input)
         {
             string token = string.Empty;
+            string state = string.Empty;
+
             for (int i = 0; i < input.Length; i++)
             {
                 char peek(int j){
                     int t = i; 
                     t+=j; 
                     return input[t];
-                }
+                }                
 
                 if(!seps.Contains(input[i]))
                 {
@@ -90,8 +91,9 @@ namespace trilc
                         case '.': 
                             if(peek(1) == '.'){
                                 i++;
-                                addToken(TokenType.LineCom);
-                                break;
+                                goto Exit;
+                                // addToken(TokenType.LineCom);
+                                // break;
                             }
                             if(peek(1) == '['){
                                 i++;
@@ -142,10 +144,22 @@ namespace trilc
                             break;
                     }
                 }
+
+                if(tokens.LastOrDefault().tokenType == TokenType.LineCom){
+                    state = "linecomment";
+                }
+            
             }
+
+            if(state == "linecomment"){
+                addToken(TokenType.EOL);
+            }
+
+            Exit:;
         }
 
         public Token[] lex(string[] input){
+            addToken(TokenType.SOF);
             for (int i = 0; i < input.Length; i++)
             {
                 this.lex(input[i] + " ");

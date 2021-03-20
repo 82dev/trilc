@@ -20,7 +20,8 @@ namespace trilc
             path = Path.Combine(Environment.CurrentDirectory, @"test.tril");
 
             Lexer lexer = new Lexer();
-            lexer.lex(File.ReadAllLines(Directory.GetParent(args[0]).ToString() + "\\helloworld.tril"));
+            Parser parser = new Parser();
+            parser.parse(lexer.lex(File.ReadAllLines(Directory.GetParent(args[0]).ToString() + "\\helloworld.tril")));
 
             foreach(var item in lexer.lex(File.ReadAllLines(path))){
                 Console.Write("Type: " + item.tokenType);

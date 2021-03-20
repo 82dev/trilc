@@ -33,5 +33,7 @@ namespace trilc
         ArrEnd,
         ParSta,
         ParEnd,
+        EOL,
+        SOF,
     }
 }
