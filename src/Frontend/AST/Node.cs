@@ -1,4 +1,4 @@
-namespace TrilComp
+namespace trilc
 {
     abstract class Node
     {

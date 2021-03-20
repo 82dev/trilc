@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using TrilComp;
+using trilc;
 
-namespace TrilComp
+namespace trilc
 {
     class Lexer
     {
@@ -22,7 +22,7 @@ namespace TrilComp
             {';', TokenType.SemiColon},
         };
 
-        string seps = " =+\\-*!{}[]().;";
+        string seps = " =+\\-*!{}[]().;\'\"";
         string[] keywords = new string[]{"null","string","int", "bool"};
 
         public Lexer(){}
@@ -124,7 +124,17 @@ namespace TrilComp
                             }
                             addToken(TokenType.Not);
                             break;
-                        
+                        case '\"': 
+                            string temp = string.Empty;
+                            i++;
+                            while (input[i] != '\"')
+                            {
+                                temp += input[i];
+                                i++;
+                            }
+                            addToken(TokenType.String, temp);
+                            temp = string.Empty;
+                            break;
                         default:
                             if(charTokenDict.ContainsKey(input[i])){
                                 addToken(charTokenDict[input[i]]);

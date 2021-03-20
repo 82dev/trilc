@@ -1,4 +1,4 @@
-namespace TrilComp
+namespace trilc
 {
     class Add : Operation
     {

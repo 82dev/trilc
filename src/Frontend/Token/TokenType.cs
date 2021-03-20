@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TrilComp
+namespace trilc
 {
     enum TokenType
     {
@@ -27,6 +27,7 @@ namespace TrilComp
         NotEqual,
         Not,
         SemiColon,
+        String,
         Dot,
         ArrSta,
         ArrEnd,
