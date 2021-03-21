@@ -11,6 +11,8 @@ namespace trilc
     class Lexer
     {
         private List<Token> tokens = new List<Token>();
+
+        //dict for single char tokens
         private Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
             {'{', TokenType.BlockStart},
             {'}', TokenType.BlockEnd},
@@ -21,7 +23,9 @@ namespace trilc
             {';', TokenType.SemiColon},
         };
 
+        //characters that should seperate tokens
         string seps = " =+\\-*!{}[]().;\'\"";
+
         string[] keywords = new string[]{"null","string","int", "bool"};
 
         public Lexer(){}
@@ -45,6 +49,7 @@ namespace trilc
                 }else
                 {
                     if(token != string.Empty){
+                        //switch on token
                         switch (token.ToUpper())
                         {
                             default:
@@ -92,8 +97,6 @@ namespace trilc
                             if(peek(1) == '.'){
                                 i++;
                                 goto Exit;
-                                // addToken(TokenType.LineCom);
-                                // break;
                             }
                             if(peek(1) == '['){
                                 i++;
@@ -144,15 +147,6 @@ namespace trilc
                             break;
                     }
                 }
-
-                if(tokens.LastOrDefault().tokenType == TokenType.LineCom){
-                    state = "linecomment";
-                }
-            
-            }
-
-            if(state == "linecomment"){
-                addToken(TokenType.EOL);
             }
 
             Exit:;
