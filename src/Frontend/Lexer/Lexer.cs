@@ -11,7 +11,7 @@ namespace trilc
     class Lexer
     {
         private List<Token> tokens = new List<Token>();
-
+        int line = 0;
         //dict for single char tokens
         private Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
             {'{', TokenType.BlockStart},
@@ -24,14 +24,20 @@ namespace trilc
         };
 
         //characters that should seperate tokens
-        string seps = " =+\\-*!{}[]().;\'\"";
+        string seps = " =+\\-*!{}[]().;:\'\"";
 
-        string[] keywords = new string[]{"null","string","int", "bool"};
+        Dictionary<string, TokenType> tokensDict = new Dictionary<string, TokenType>(){
+            {"null", TokenType.Keyword},
+            {"int", TokenType.Keyword},
+            {"string", TokenType.Keyword},
+            {"bool", TokenType.Keyword},
+            {"pb", TokenType.PublicFunc},
+            {"pr", TokenType.PrivateFunc},
+        };
 
         public Lexer(){}
 
-        private void lex(string input)
-        {
+        private void lex(string input){
             string token = string.Empty;
             string state = string.Empty;
 
@@ -62,8 +68,8 @@ namespace trilc
                                 if(!(string.IsNullOrEmpty(token)) ||
                                    !(string.IsNullOrWhiteSpace(token))){
 
-                                    if(keywords.Contains(token)){
-                                        addToken(TokenType.Keyword, token);
+                                    if(tokensDict.ContainsKey(token)){
+                                        addToken(tokensDict[token], token);
                                         break;
                                     }
 
@@ -77,6 +83,10 @@ namespace trilc
 
                     switch (input[i])
                     {
+                        case ':':
+                            addToken(TokenType.Colon); 
+                            break;
+
                         case '+': 
                             if(peek(1) == '+'){
                                 i++;
@@ -132,10 +142,15 @@ namespace trilc
                         case '\"': 
                             string temp = string.Empty;
                             i++;
+                            int j = i-1;
                             while (input[i] != '\"')
                             {
                                 temp += input[i];
                                 i++;
+                                if(i >= input.Length){
+                                    new Error($"Unclosed string at line {line+1}, char {j+1}");
+                                    break;
+                                }
                             }
                             addToken(TokenType.String, temp);
                             temp = string.Empty;
@@ -157,6 +172,7 @@ namespace trilc
             for (int i = 0; i < input.Length; i++)
             {
                 this.lex(input[i] + " ");
+                line++;
             }
             addToken(TokenType.EOF);
             return tokens.ToArray();

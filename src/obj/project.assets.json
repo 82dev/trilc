@@ -58,11 +58,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\src.csproj",
+      "projectUniqueName": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\src.csproj",
       "projectName": "src",
-      "projectPath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\src.csproj",
+      "projectPath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\src.csproj",
       "packagesPath": "C:\\Users\\Rishabh Shah\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\obj\\",
+      "outputPath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"

@@ -19,7 +19,8 @@ namespace trilc
 
         public Token(TokenType tt)
         {
-            this.tokenType = tt;           
+            this.tokenType = tt;
+            this.value = "";
         }
 
     }

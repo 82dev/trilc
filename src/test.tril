@@ -1,9 +1,0 @@
-{
-    .[
-        This is a test block comment
-    ].
-
-    null main([string] cmdargs){
-        bool i;
-    }
-}

@@ -10,7 +10,11 @@ namespace trilc
     enum TokenType
     {
         EOF,
+        Colon,
+        Unknown,
         Keyword,
+        PublicFunc,
+        PrivateFunc,
         BlockStart,
         BlockEnd,
         ID,

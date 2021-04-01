@@ -3,9 +3,7 @@
 {
     use System;
 
-    .[
-        Floating Ambigious entry point
-    ].
+    ..FLoating AMBigous entry point
     null main([string] cmdargs){
         Output console = Output.Console;
         console.Write("Hello World");

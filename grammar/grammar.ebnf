@@ -4,4 +4,4 @@
 [number] ::= [digit]*+
 
 [operator] ::= ('+'|'-'|'*'|'/'|)
-[operation] ::= ([operation] '+' [operation]) | [number]
+[operation] ::= ([operation] [operator] [operation]) | [number]

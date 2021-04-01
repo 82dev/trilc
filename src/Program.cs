@@ -11,31 +11,49 @@ namespace trilc
     {
         static void Main(string[] args)
         {
-            Add add = new Add();
-            Sub sub = new Sub();
-            Mul mul = new Mul();
-            Div div = new Div();
-
-            string path = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).ToString(), @"grammar\example.tril");
-            path = Path.Combine(Environment.CurrentDirectory, @"test.tril");
-
-            Lexer lexer = new Lexer();
-            Parser parser = new Parser();
-            parser.parse(lexer.lex(File.ReadAllLines(Directory.GetParent(args[0]).ToString() + "\\helloworld.tril")));
-
-            foreach(var item in lexer.lex(File.ReadAllLines(path))){
-                Console.Write("Type: " + item.tokenType);
-                if(!string.IsNullOrEmpty(item.value)){
-                    Console.Write(" Value: " + item.value);
-                }
-                Console.Write("\n");
-            }
+            Dictionary<string, string> metadata = new Dictionary<string, string>();
 
             if(args[0] != null){
                 string json = File.ReadAllText(args[0]);
-                Dictionary<string, string> metadata = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                metadata = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            }
+            else
+            {
+                System.Console.WriteLine("Correct usage: trilc 'path to file'");
+                Environment.Exit(0);
             }
 
+            Lexer lexer = new Lexer();
+            Parser parser = new Parser();
+            Token[] tokens = lexer.lex(File.ReadAllLines(Directory.GetParent(args[0]).ToString() + "\\" + metadata["entryfile"]+".tril"));
+            CST parseTree = parser.parse(tokens);
+
+            // int i = 1;
+            // foreach (var item in ast.root.children)
+            // {
+            //     int j = i;
+            //     foreach (var ite in item)
+            //     {
+            //         string space = string.Empty;
+            //         int k = j * 4;
+            //         while (k > 0)
+            //         {
+            //             space += " ";
+            //             k--;
+            //         }
+            //         System.Console.WriteLine(space + ite.GetType().ToString());
+            //     }
+            //     i++;
+            // }
+
+
+            // foreach(var item in lexer.lex(File.ReadAllLines(path))){
+            //     Console.Write("Type: " + item.tokenType);
+            //     if(!string.IsNullOrEmpty(item.value)){
+            //         Console.Write(" Value: " + item.value);
+            //     }
+            //     Console.Write("\n");
+            // }
             Console.ReadLine();
         }
     }

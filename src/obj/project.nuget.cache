@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "raL7nVNs309n4yD9wx4SYYdaljy1FMgxYaVz/3vw+aNJ23pJpqUg8EYprBTwRkpbX2iHm4YEEwJZcFhQC+YgiQ==",
+  "dgSpecHash": "M7Bi/0O+ubQg/+HpxmaqtpOdIqQdVkgtS5HCYmykLS7uXOWQHc9DRgm753IdREdzH4lMojRPoCbjE4hgNTsv/w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\src.csproj",
+  "projectFilePath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\src.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Rishabh Shah\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
   ],
