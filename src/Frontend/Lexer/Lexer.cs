@@ -11,8 +11,6 @@ namespace trilc
     class Lexer
     {
         private List<Token> tokens = new List<Token>();
-        int line = 0;
-        //dict for single char tokens
         private Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
             {'{', TokenType.BlockStart},
             {'}', TokenType.BlockEnd},
@@ -23,21 +21,13 @@ namespace trilc
             {';', TokenType.SemiColon},
         };
 
-        //characters that should seperate tokens
-        string seps = " =+\\-*!{}[]().;:\'\"";
-
-        Dictionary<string, TokenType> tokensDict = new Dictionary<string, TokenType>(){
-            {"null", TokenType.Keyword},
-            {"int", TokenType.Keyword},
-            {"string", TokenType.Keyword},
-            {"bool", TokenType.Keyword},
-            {"pb", TokenType.PublicFunc},
-            {"pr", TokenType.PrivateFunc},
-        };
+        string seps = " =+\\-*!{}[]().;\'\"";
+        string[] keywords = new string[]{"null","string","int", "bool"};
 
         public Lexer(){}
 
-        private void lex(string input){
+        private void lex(string input)
+        {
             string token = string.Empty;
             string state = string.Empty;
 
@@ -55,7 +45,6 @@ namespace trilc
                 }else
                 {
                     if(token != string.Empty){
-                        //switch on token
                         switch (token.ToUpper())
                         {
                             default:
@@ -68,8 +57,8 @@ namespace trilc
                                 if(!(string.IsNullOrEmpty(token)) ||
                                    !(string.IsNullOrWhiteSpace(token))){
 
-                                    if(tokensDict.ContainsKey(token)){
-                                        addToken(tokensDict[token], token);
+                                    if(keywords.Contains(token)){
+                                        addToken(TokenType.Keyword, token);
                                         break;
                                     }
 
@@ -83,10 +72,6 @@ namespace trilc
 
                     switch (input[i])
                     {
-                        case ':':
-                            addToken(TokenType.Colon); 
-                            break;
-
                         case '+': 
                             if(peek(1) == '+'){
                                 i++;
@@ -107,6 +92,8 @@ namespace trilc
                             if(peek(1) == '.'){
                                 i++;
                                 goto Exit;
+                                // addToken(TokenType.LineCom);
+                                // break;
                             }
                             if(peek(1) == '['){
                                 i++;
@@ -142,15 +129,10 @@ namespace trilc
                         case '\"': 
                             string temp = string.Empty;
                             i++;
-                            int j = i-1;
                             while (input[i] != '\"')
                             {
                                 temp += input[i];
                                 i++;
-                                if(i >= input.Length){
-                                    new Error($"Unclosed string at line {line+1}, char {j+1}");
-                                    break;
-                                }
                             }
                             addToken(TokenType.String, temp);
                             temp = string.Empty;
@@ -162,6 +144,15 @@ namespace trilc
                             break;
                     }
                 }
+
+                if(tokens.LastOrDefault().tokenType == TokenType.LineCom){
+                    state = "linecomment";
+                }
+            
+            }
+
+            if(state == "linecomment"){
+                addToken(TokenType.EOL);
             }
 
             Exit:;
@@ -172,7 +163,6 @@ namespace trilc
             for (int i = 0; i < input.Length; i++)
             {
                 this.lex(input[i] + " ");
-                line++;
             }
             addToken(TokenType.EOF);
             return tokens.ToArray();
@@ -185,17 +175,5 @@ namespace trilc
             tokens.Add(new Token(tokenType));
         }
 
-    }
-
-    public static class Extensions{
-        public static bool isNumber(this String input){
-            foreach (var item in input)
-            {
-                if(!char.IsDigit(item)){
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }

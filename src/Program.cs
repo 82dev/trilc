@@ -23,11 +23,19 @@ namespace trilc
                 Environment.Exit(0);
             }
 
-            Lexer lexer = new Lexer();
-            Parser parser = new Parser();
-            Token[] tokens = lexer.lex(File.ReadAllLines(Directory.GetParent(args[0]).ToString() + "\\" + metadata["entryfile"]+".tril"));
-            CST parseTree = parser.parse(tokens);
+            // Parser parser = new Parser(File.ReadAllText(Directory.GetParent(args[0]).ToString()
+            //                                                                  + "\\" 
+            //                                                                  + metadata["entryfile"]
+            //                                                                  + ".tril"));
 
+            Parser parser = new Parser(File.ReadAllLines(
+                                        Directory.GetParent(args[0]).ToString()
+                                                                            + "\\"
+                                                                            + metadata["entryfile"]
+                                                                            + ".tril"
+                                        ));
+
+            parser.parse();
             // int i = 1;
             // foreach (var item in ast.root.children)
             // {

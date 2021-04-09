@@ -1,76 +1,73 @@
 using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace trilc
 {
     class Parser
     {
-        /*aa
-            this is stack based, so to represent A -> 'a'+'b',
-            left goes to right, right goes to left
-        */
-        Dictionary<Node[], Node> dict = new Dictionary<Node[], Node>(){
-            {new Node[]{new SemiCoTkNode(""), new KeywordTkNode("int"), new ColonTkNode(""),new IdTkNode("")}, new AssTkNode("")},
-            {new Node[]{new AssTkNode(""), new AssTkNode("")}, new root("")}
-        };
+        bool error;
+        Token[] tokens;
+        Token cur{get => tokens[index];set => cur = value;}
+        private int index = 0;
 
-        Dictionary<TokenType, Type> typeDict = new Dictionary<TokenType, Type>(){
-            {TokenType.Keyword, typeof(KeywordTkNode)},
-            {TokenType.ID, typeof(IdTkNode)},
-            {TokenType.SemiColon, typeof(SemiCoTkNode)},
-            {TokenType.Colon, typeof(ColonTkNode)},
-        };
+        #region check
+        private bool same(TokenType tt){return cur.tokenType == tt;}
+        private bool same(TokenType t, string value){if(same(t) && same(value)){return true;}return false;}
+        private bool same(string v){if(cur.value == v){return true;}return false;}
 
-        Stack<Node> stack = new Stack<Node>();
-        public CST parse(Token[] input){
-            for(int i = 0; i < input.Length; i++){
-                if(typeDict.ContainsKey(input[i].tokenType)){
-                    stack.Push((Node)Activator.CreateInstance(typeDict[input[i].tokenType], input[i].value));
+        private bool match(TokenType tt){if(same(tt)){consume();return true;}return false;}
+        private bool match(string v){if(same(v)){consume();return true;}return false;}
+        private bool match(TokenType tt,string v){if(same(tt,v)){consume();return true;}return false;}
+
+        private bool match(params TokenType[] tt){
+            foreach (var item in tt)
+            {
+                if(match(item) == false){
+                    return false;
                 }
-                reduce();
             }
-            reduce();
-            return new CST((root)stack.Pop());
+            return true;
         }
 
-        public bool reduce(){
-            bool hasReduced = default;
-            //try reduce
-            List<Node> buffer = new List<Node>();
-            //loop throughh stack frop top
-            for (int j = 0; j < stack.Count; j++)
+        private bool expect(string message, params TokenType[] tt){
+            bool a = match(tt);
+            if(!a)
             {
-                //add item from stack to list
-                buffer.Add(stack.ElementAt(j));
-
-                //loop through the keys of dictionary
-                foreach (var item in dict.Keys.ToArray())
-                {
-                    //if buffer and key are same,
-                    if(item.same(buffer.ToArray())){
-                        hasReduced = true;
-                        List<Node> children = new List<Node>();
-                        //pop every item needed for reduction
-                        int k = j+1;
-                        while (k > 0)
-                        {
-                            children.Add(stack.Pop());
-                            k--;
-                        }
-
-                        Node node = (Node)Activator.CreateInstance(dict[item].GetType(), dict[item].value);
-                        node.AddChild(children);
-
-                        //push reduction
-                        stack.Push(node);
-                    }
-                }
+                new Error(message);
             }
+            return a;
+        }
+        #endregion
 
-            return hasReduced;
+        #region gets
+        private Token previous(int i){return tokens[index-i];}
+        private Token previous(){return tokens[index-1];}
+
+        private void consume(){index++;}
+        #endregion
+
+        public Parser(string[] input)
+        {
+            tokens = new Lexer().lex(input);
+        }
+
+        public void parse(){
+            expect("",TokenType.SOF);
+            var a = block();
+        }
+
+        public Stmt block(){
+            List<Stmt> stmts = new List<Stmt>();
+            expect("Expect \'{\'",TokenType.BlockStart);
+            do{
+
+            }while(!match());
+            return new Stmt.Block(stmts);
+        }
+
+        public Stmt stmt(){
+            expect("Expect ';'", TokenType.SemiColon);
+            return new Stmt.testDec();
         }
     }
 }
