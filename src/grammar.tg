@@ -3,8 +3,8 @@
 id and num have been omitted
 ---------------------------------------------------------------------------------------------------
 #program# ]> {block} EOF
-block ]> '{'(({stmt})+)'}'
-stmt ]> ({ass}|{dec})+';'
+block ]> '{'(({stmt})*)'}'
+stmt ]> ({dec})*';'
 ass ]> {id}{eql}
 dec ]> {id}':'{type}
 type ]> ('int'|'string'|'bool')

@@ -1,7 +1,0 @@
-[digit] ::= (0->9)
-[letter] ::= (a->z)
-[word] ::= [letter]*+
-[number] ::= [digit]*+
-
-[operator] ::= ('+'|'-'|'*'|'/'|)
-[operation] ::= ([operation] [operator] [operation]) | [number]

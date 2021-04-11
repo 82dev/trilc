@@ -1,11 +1,10 @@
 ..Prints Hello World
-
 {
     use System;
 
     ..FLoating AMBigous entry point
-    null main([string] cmdargs){
-        Output console = Output.Console;
+    main:null = pb([string] cmdargs){
+        console: Output = Output.Console;
         console.Write("Hello World");
     }
 }
