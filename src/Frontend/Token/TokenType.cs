@@ -32,7 +32,7 @@ namespace trilc
         ParSta, ParEnd,
 
         //Booleans
-        Equal, NotEqual, Not, True, False,
+        Equal, NotEqual, Not, True, False,Greater, GreaterEq, Lesser, LesserEq,
 
         //Keywords
         PublicFunc, PrivateFunc, Use, NULL, INT, BOOL,

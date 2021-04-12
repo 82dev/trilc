@@ -35,7 +35,7 @@ namespace trilc
         public abstract class Expr:Stmt{
 
             public class Grouping : Expr{
-                Expr expr;
+                public Expr expr;
 
                 public Grouping(Expr e)
                 {
@@ -44,9 +44,9 @@ namespace trilc
             }
 
             public class Binary : Expr{
-                Expr left;
-                Token op;
-                Expr right;
+                public Expr left;
+                public Token op;
+                public Expr right;
 
                 public Binary(Expr l, Token o, Expr r){
                     left = l;
@@ -56,8 +56,8 @@ namespace trilc
             }
 
             public class Unary : Expr{
-                Token op;
-                Expr expr;
+                public Token op;
+                public Expr expr;
 
                 public Unary(Token o, Expr e){
                     op = o;
@@ -66,7 +66,7 @@ namespace trilc
             }
 
             public class Literal : Expr{
-                object value;
+                public object value;
 
                 public Literal(object value)
                 {

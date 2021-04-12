@@ -66,7 +66,7 @@ namespace trilc
                     // case TokenType.RETURN:
                     //     return;
                 // }
-
+                //nice
                 consume();
             }
         }
@@ -77,7 +77,21 @@ namespace trilc
         }
 
         public void parse(){
-            var a = block();
+            var a = pBlock();
+        }
+
+        public Stmt pBlock(){
+            List<Stmt> stmts = new List<Stmt>();
+            expect("Expect \'{\'!",TokenType.BlockStart);
+            do{
+                var a = stmt();
+                if(a != null){
+                    stmts.Add(a);
+                }
+            }while(!match(TokenType.BlockEnd));
+
+            expect("Expect EOF", TokenType.EOF);
+            return new Stmt.Block(stmts);
         }
 
         public Stmt block(){
@@ -89,8 +103,6 @@ namespace trilc
                     stmts.Add(a);
                 }
             }while(!match(TokenType.BlockEnd));//nice
-
-            expect("Expect EOF", TokenType.EOF);
             return new Stmt.Block(stmts);
         }
 
@@ -110,7 +122,7 @@ namespace trilc
                     return dec();
                 }
             }
-            catch (ParseException error)
+            catch (ParseException)
             {
                 synchronize();
                 return null;
@@ -140,10 +152,31 @@ namespace trilc
 
         #region Expressions
         public Stmt expr(){
-            return term();
+            return equality();
         }
 
-        public Stmt term(){
+        public Stmt equality(){
+            Stmt.Expr expr = comparision();
+            if(match(TokenType.Equal)||match(TokenType.NotEqual)){
+                Token op = previous();
+                Stmt.Expr right = comparision();
+                expr = new Stmt.Expr.Binary(expr, op, right);
+            }
+            return expr;
+        }
+
+        public Stmt.Expr comparision(){
+            Stmt.Expr expr = term();
+            if(match(TokenType.Greater)||match(TokenType.GreaterEq)
+               ||match(TokenType.Lesser)||match(TokenType.LesserEq)){
+                Token op = previous();
+                Stmt.Expr right = term();
+                expr = new Stmt.Expr.Binary(expr, op, right);
+            }
+            return expr;
+        }
+
+        public Stmt.Expr term(){
             Stmt.Expr expr = factor();
             if(match(TokenType.Plus)||match(TokenType.Minus)){
                 Token op = previous();

@@ -36,7 +36,7 @@ namespace trilc
             {'/', TokenType.Slash},
         };
 
-        string seps = " =+/-*!{}[]().;:\'\"";
+        string seps = " =+/-*!{}[]().;:\'\"<>";
         string[] keywords = new string[]{};
 
         public Lexer(){}
@@ -150,6 +150,21 @@ namespace trilc
                             }
                             addToken(TokenType.String, temp);
                             temp = string.Empty;
+                            break;
+                        case '<': 
+                            if(peek(1) == '='){
+                                charIndex++;
+                                addToken(TokenType.LesserEq, "<=");
+                            }
+                            addToken(TokenType.Lesser, "<");
+                            break;
+                        case '>': 
+                            if(peek(1) == '='){
+                                charIndex++;
+                                addToken(TokenType.GreaterEq, ">=");
+                                break;
+                            }
+                            addToken(TokenType.Greater, ">");
                             break;
                         default:
                             if(charTokenDict.ContainsKey(input[charIndex])){
