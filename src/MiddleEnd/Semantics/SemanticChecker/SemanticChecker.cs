@@ -1,0 +1,7 @@
+namespace trilc
+{
+    class SemanticChecker
+    {
+        
+    }
+}

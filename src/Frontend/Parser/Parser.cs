@@ -5,6 +5,11 @@ namespace trilc
 {
     class Parser
     {
+        enum Mode{
+            None,
+            Debug,
+        }
+
         bool error;
         Token[] tokens;
         Token cur{get => tokens[index];set => cur = value;}
@@ -41,6 +46,11 @@ namespace trilc
             }
             return a;
         }
+
+        private void assert(string msg){
+            new Error(msg);
+            throw new ParseException();
+        }
         #endregion
         #region gets
         private Token previous(int i){return tokens[index-i];}
@@ -70,28 +80,35 @@ namespace trilc
                 consume();
             }
         }
+        
+        // CodeG codeG = new CodeG();
 
         public Parser(string[] input)
         {
             tokens = new Lexer().lex(input);
         }
 
-        public void parse(){
-            var a = pBlock();
+        public Stmt.Program parse(){
+            var AST = program();
+
+            string curdir = Environment.CurrentDirectory;
+            curdir = System.IO.Directory.GetParent(curdir).ToString();
+
+            // codeG.writeBC(curdir+"\\tests\\test.tbc", codeG.fromStmt(AST));
+            
+            return AST;
         }
 
-        public Stmt pBlock(){
+        public Stmt.Program program(){
             List<Stmt> stmts = new List<Stmt>();
-            expect("Expect \'{\'!",TokenType.BlockStart);
-            do{
+            while(!match(TokenType.EOF)){
                 var a = stmt();
                 if(a != null){
                     stmts.Add(a);
                 }
-            }while(!match(TokenType.BlockEnd));
-
+            }
             expect("Expect EOF", TokenType.EOF);
-            return new Stmt.Block(stmts);
+            return new Stmt.Program(stmts);
         }
 
         public Stmt block(){
@@ -133,7 +150,7 @@ namespace trilc
 
         public Stmt dec(){
             string name = previous(3).value;
-            string type = previous().value;
+            Token type = previous();
             expect("Expect ';' ", TokenType.SemiColon);
             return new Stmt.Dec(name, type);
         }
@@ -141,10 +158,15 @@ namespace trilc
         public Stmt newAss(){
             string name = previous(4).value;
             Token type = previous(2);
-            Stmt.Expr exp = expr() as Stmt.Expr;
+            Stmt exp = expr();
             expect("Expected ';'", TokenType.SemiColon);
-            if(exp != null){    
-                return new Stmt.newAssign(name, exp, type);
+            if(exp != null){
+                // if(!false){
+                //     error = true;
+                //     new Error($"Error at ({type.lineIndex},{type.charIndex})! the expression could not converted to type '{type.value}'");
+                //     throw new ParseException();
+                // }
+                return new Stmt.newAssign(name, exp as Stmt.Expr, type);
             }
 
             return null;
@@ -155,11 +177,11 @@ namespace trilc
             return equality();
         }
 
-        public Stmt equality(){
+        public Stmt.Expr equality(){
             Stmt.Expr expr = comparision();
             if(match(TokenType.Equal)||match(TokenType.NotEqual)){
                 Token op = previous();
-                Stmt.Expr right = comparision();
+                Stmt.Expr right = equality();
                 expr = new Stmt.Expr.Binary(expr, op, right);
             }
             return expr;
@@ -211,6 +233,13 @@ namespace trilc
             if(match(TokenType.NUM)){
                 return new Stmt.Expr.Literal(int.Parse(now.value));
             }
+            if(match(TokenType.True)){
+                return new Stmt.Expr.Literal(true);
+            }
+            if(match(TokenType.False)){
+                return new Stmt.Expr.Literal(false);
+            }
+
             if(match(TokenType.ParSta)){
                 Stmt.Expr e = expr() as Stmt.Expr;
                 expect("Expect ')' after expression", TokenType.ParEnd);
@@ -228,6 +257,8 @@ namespace trilc
                         return true;
                     }
                 }
+            }else{
+                assert($"Expected identifier got {cur.tokenType}! Error at ({cur.lineIndex},{cur.charIndex})");
             }
             return false;
         }

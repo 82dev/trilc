@@ -46,6 +46,8 @@ namespace trilc
             string token = string.Empty;
             string state = string.Empty;
 
+            //for each charecter in the string, if its not in the seps string,
+            //add it to a buffer string
             for (charIndex = 0; charIndex < input.Length; charIndex++)
             {
                 char peek(int j){
@@ -127,7 +129,7 @@ namespace trilc
                         case '=':
                             if(peek(1) == '='){
                                 charIndex++;
-                                addToken(TokenType.Equal,input[charIndex]);
+                                addToken(TokenType.Equal,"==");
                                 break;
                             }
                             addToken(TokenType.Assignment,input[charIndex]);
@@ -135,7 +137,7 @@ namespace trilc
                         case '!':
                             if(peek(1) == '='){
                                 charIndex++;
-                                addToken(TokenType.NotEqual,input[charIndex]);
+                                addToken(TokenType.NotEqual,"!=");
                                 break;
                             }
                             addToken(TokenType.Not,input[charIndex]);
