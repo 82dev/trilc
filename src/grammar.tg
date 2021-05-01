@@ -1,14 +1,11 @@
-#*# ]> * entrypoint
-` ]> valid in context
-id and num have been omitted
----------------------------------------------------------------------------------------------------
-#program# ]> {block} EOF
-block ]> '{'(({stmt})*)'}'
-stmt ]> ({dec})*';'
-ass ]> {id}{eql}
-dec ]> {id}':'{type}
-type ]> ('int'|'string'|'bool')
-eql ]> '='{expr}
-expr ]> {term}
-term ]> {factor}(('+''-'{factor})*)
-factor ]> {num}(('*''/'{num})*)
+program ]> stmt* EOF
+
+stmt ]> block
+     |  dec
+     |  newAss
+     |  ';'
+
+block ]> '{'
+            stmt*
+         '}'
+

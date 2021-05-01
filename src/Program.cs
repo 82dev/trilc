@@ -9,8 +9,10 @@ namespace trilc
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
+            int exit = 0;
+
             //get the metadat required from the .tmd
             Dictionary<string, object> metadata = new Dictionary<string, object>();
             if(args[0] != null){
@@ -37,11 +39,11 @@ namespace trilc
                 }
             }
 
-            string[] fileLines;
+            string fileText;
 
             try
             {
-                fileLines = File.ReadAllLines(args[0]
+                fileText = File.ReadAllText(args[0]
                                         + "\\"
                                         + metadata["entryfile"]
                                         + ".tril");
@@ -49,6 +51,7 @@ namespace trilc
             catch (FileNotFoundException)
             {
                 System.Console.WriteLine($"The entryfile in '"+Path.Join(args[0], ".tmd")+"' is not a valid file. Compilation terminated");
+                exit = -1;
                 goto Done;
             } 
 
@@ -57,15 +60,15 @@ namespace trilc
                 flags = args[1];
             }
 
-            Parser parser = new Parser(fileLines);
-            var prog = parser.parse();
-
-            TypeChecker.CheckBlock(prog);
+            // Parser parser = new Parser(fileText);
+            // var prog = parser.parse();
+            // Semantics.check(prog);
 
             Done:;
             #if DEBUG
                 Console.ReadLine();
             #endif
+            return exit;
         }
     }
 }

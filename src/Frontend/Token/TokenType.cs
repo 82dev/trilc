@@ -18,9 +18,9 @@ namespace trilc
         Dot,
         SemiColon,
         Colon,
-        Plus,Inc,
+        Plus,Increase,
         Minus,Decrease,
-        // =
+        //=
         Assignment,
         Asterisk,
         Slash,
@@ -35,8 +35,8 @@ namespace trilc
         Equal, NotEqual, Not, True, False,Greater, GreaterEq, Lesser, LesserEq,
 
         //Keywords
-        PublicFunc, PrivateFunc, Use, NULL, INT, BOOL,
-        LineCom,
+        PublicFunc, PrivateFunc, Use, VOID, INT, BOOL, Func
+        
         
     }
 }

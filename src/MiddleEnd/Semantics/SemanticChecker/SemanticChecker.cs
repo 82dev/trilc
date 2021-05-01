@@ -1,7 +1,10 @@
 namespace trilc
 {
-    class SemanticChecker
+    class Semantics
     {
-        
+        public static void check(Stmt.Program program)
+        {
+            
+        }
     }
 }

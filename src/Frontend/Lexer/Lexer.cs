@@ -10,20 +10,17 @@ namespace trilc
 {
     class Lexer
     {
-        short lineIndex = 0;
-        short charIndex = 0;
-
-        private Dictionary<string, TokenType> stringTokenDict = new Dictionary<string, TokenType>(){
+        static Dictionary<string, TokenType> stringTokenDict = new Dictionary<string, TokenType>(){
             {"use", TokenType.Use},
             {"true", TokenType.True},
             {"false", TokenType.False},
-            {"null", TokenType.NULL},
+            {"fn", TokenType.Func},
+            {"void", TokenType.VOID},
             {"int", TokenType.INT},
             {"bool", TokenType.BOOL},
         };
-
-        private List<Token> tokens = new List<Token>();
-        private Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
+        static char[] seps = " =+/-*!{}[]().;:\'\"<>\n".ToCharArray();
+        static Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
             {'{', TokenType.BlockStart},
             {'}', TokenType.BlockEnd},
             {'[', TokenType.ArrSta},
@@ -33,176 +30,162 @@ namespace trilc
             {';', TokenType.SemiColon},
             {':', TokenType.Colon},
             {'*', TokenType.Asterisk},
-            {'/', TokenType.Slash},
+            {'.', TokenType.Dot},
         };
 
-        string seps = " =+/-*!{}[]().;:\'\"<>";
-        string[] keywords = new string[]{};
+        int lineIndex = 0;
+        short charIndex = 0;
+        List<Token> tokens = new List<Token>();
 
-        public Lexer(){}
+        public Token[] lex(string source){
+            string buffer = string.Empty;
 
-        private void lex(string input)
-        {
-            string token = string.Empty;
-            string state = string.Empty;
+            int i = 0;
 
-            //for each charecter in the string, if its not in the seps string,
-            //add it to a buffer string
-            for (charIndex = 0; charIndex < input.Length; charIndex++)
+            char peek(int j) => source[i + 1];
+            bool expect(int j, char c){
+                if(peek(j) == c){
+                    i += j;
+                    return true;
+                }
+                return false;
+            }
+
+            while (i < source.Length)
             {
-                char peek(int j){
-                    int t = charIndex; 
-                    t+=j; 
-                    return input[t];
-                }                
-
-                if(!seps.Contains(input[charIndex]))
-                {
-                    token += input[charIndex];
-                }else
-                {
-                    if(token != string.Empty){
-                        switch (token.ToUpper())
+                charIndex = (short)i;
+                if(!seps.Contains(source[i])){
+                    buffer += source[i];
+                }
+                else{
+                    if(buffer.Replace("\n", "").Replace("\r","") != string.Empty){
+                        switch (buffer)
                         {
                             default:
-                                if(stringTokenDict.ContainsKey(token)){
-                                    addToken(stringTokenDict[token], token);
+                                if(stringTokenDict.ContainsKey(buffer)){
+                                    addToken(stringTokenDict[buffer], buffer);
                                     break;
                                 }
 
-                                string temp = token;
+                                string temp = buffer;
                                 if(temp.isNumber()){
-                                    addToken(TokenType.NUM, token);
+                                    addToken(TokenType.NUM, buffer);
                                     break;
                                 }
                                 
-                                if(!(string.IsNullOrEmpty(token)) ||
-                                   !(string.IsNullOrWhiteSpace(token))){
-                                    addToken(TokenType.ID, token);
+                                if(!(string.IsNullOrEmpty(buffer)) ||
+                                   !(string.IsNullOrWhiteSpace(buffer))){
+                                    addToken(TokenType.ID, buffer);
                                 }
 
                                 break;
                         }
-                        token = string.Empty;
+                        buffer = string.Empty;
                     }
 
-                    switch (input[charIndex])
+                    switch (source[i])
                     {
-                        case '+': 
-                            if(peek(1) == '+'){
-                                charIndex++;
-                                addToken(TokenType.Inc, input[charIndex]);
+                        case '\n':{
+                            lineIndex++;
+                            charIndex = 0;
+                            break;
+                        }
+                        case '+':{ 
+                            if(expect(1, '+')){
+                                addToken(TokenType.Increase, "++");
+                            }
+                            addToken(TokenType.Plus);
+                            break;
+                        }
+                        case '-':{ 
+                            if(expect(1, '-')){
+                                addToken(TokenType.Decrease, "--");
+                            }
+                            addToken(TokenType.Minus);
+                            break;
+                        }
+                        case '=':{
+                            if(expect(1, '=')){
+                                addToken(TokenType.Equal, "==");
+                            }
+                            addToken(TokenType.Assignment, "=");
+                            break;
+                        }
+                        case '/':{
+                            if(expect(1, '/')){
+                                int tmp = i;
+                                while (source[tmp] != '\n' || tmp >= source.Length)
+                                {
+                                    tmp++;
+                                }
+                                i = tmp;
                                 break;
                             }
-                            addToken(TokenType.Plus, input[charIndex]);
+                            addToken(TokenType.Slash, "/");
                             break;
-                        case '-': 
-                            if(peek(1) == '-'){
-                                charIndex++;
-                                addToken(TokenType.Decrease, input[charIndex]);
-                                break;
-                            }
-                            addToken(TokenType.Minus, input[charIndex]);
-                            break;
-                        case '.': 
-                            if(peek(1) == '.'){
-                                charIndex++;
-                                goto Exit;
-                                // addToken(TokenType.LineCom);
-                                // break;
-                            }
-                            if(peek(1) == '['){
-                                charIndex++;
-                                addToken(TokenType.ComStart,input[charIndex]);
-                                break;
-                            }
-                            addToken(TokenType.Dot,input[charIndex]);
-                            break;
-                        case ']': 
-                            if(peek(1) == '.'){
-                                charIndex++;
-                                addToken(TokenType.ComEnd,input[charIndex]);
-                                break;
-                            }
-                            addToken(TokenType.ArrEnd,input[charIndex]);
-                            break;
-                        case '=':
-                            if(peek(1) == '='){
-                                charIndex++;
-                                addToken(TokenType.Equal,"==");
-                                break;
-                            }
-                            addToken(TokenType.Assignment,input[charIndex]);
-                            break;
-                        case '!':
-                            if(peek(1) == '='){
-                                charIndex++;
-                                addToken(TokenType.NotEqual,"!=");
-                                break;
-                            }
-                            addToken(TokenType.Not,input[charIndex]);
-                            break;
-                        case '\"': 
-                            string temp = string.Empty;
-                            charIndex++;
-                            while (input[charIndex] != '\"')
+                        }
+                        case '\"':{
+                            string tmp = string.Empty;
+                            int j = i+1;
+                            while (source[j] != '\"')
                             {
-                                temp += input[charIndex];
-                                charIndex++;
+                                tmp += source[j];
+                                j++;
                             }
-                            addToken(TokenType.String, temp);
-                            temp = string.Empty;
+                            i = j;
+                            addToken(TokenType.String, tmp);
                             break;
-                        case '<': 
-                            if(peek(1) == '='){
-                                charIndex++;
+                        }
+                        case '>':{
+                            if(expect(1, '=')){
+                                addToken(TokenType.GreaterEq, ">=");
+                            }
+                            addToken(TokenType.Greater);
+                            break;
+                        }
+                        case '<':{
+                            if(expect(1, '=')){
                                 addToken(TokenType.LesserEq, "<=");
                             }
-                            addToken(TokenType.Lesser, "<");
+                            addToken(TokenType.Lesser);
                             break;
-                        case '>': 
-                            if(peek(1) == '='){
-                                charIndex++;
-                                addToken(TokenType.GreaterEq, ">=");
+                        }
+                        case '!':{
+                            if(expect(1, '=')){
+                                addToken(TokenType.NotEqual, ">=");
+                            }
+                            addToken(TokenType.Not);
+                            break;
+                        }
+
+                        default:{
+                            if(charTokenDict.ContainsKey(source[i])){
+                                addToken(charTokenDict[source[i]], source[i]);
                                 break;
                             }
-                            addToken(TokenType.Greater, ">");
                             break;
-                        default:
-                            if(charTokenDict.ContainsKey(input[charIndex])){
-                                addToken(charTokenDict[input[charIndex]],input[charIndex]);
-                            }
-                            break;
+                        }
                     }
-                }
 
-                if(tokens.LastOrDefault().tokenType == TokenType.LineCom){
-                    state = "linecomment";
+                    buffer = string.Empty;
                 }
-            
+                i++;
             }
-            
-            Exit:;
-        }
 
-        public Token[] lex(string[] input){
-            for (lineIndex = 0; lineIndex < input.Length; lineIndex++)
-            {
-                this.lex(input[lineIndex] + " ");
-            }
-            addToken(TokenType.EOF, "EOF");
+            addToken(TokenType.EOF, null);
             return tokens.ToArray();
         }
 
-        private void addToken(TokenType tokenType, char v){
-            tokens.Add(new Token(tokenType, v.ToString(), (short)(lineIndex + 1), (short)(charIndex+1)));
-        }
-        private void addToken(TokenType tokenType, string v){
-            tokens.Add(new Token(tokenType, v, (short)(lineIndex + 1), (short)(charIndex+1)));
-        }
-        private void addToken(TokenType tokenType){
-            tokens.Add(new Token(tokenType, (short)(lineIndex + 1), (short)(charIndex+1)));
-        }
-
+        #region AddToken
+            private void addToken(TokenType tokenType, char v){
+                tokens.Add(new Token(tokenType, v.ToString(), (Int16)(lineIndex + 1), (short)(charIndex+1)));
+            }
+            private void addToken(TokenType tokenType, string v){
+                tokens.Add(new Token(tokenType, v, (Int16)(lineIndex + 1), (short)(charIndex+1)));
+            }
+            private void addToken(TokenType tokenType){
+                tokens.Add(new Token(tokenType, (Int16)(lineIndex + 1), (short)(charIndex+1)));
+            }
+        #endregion
     }
-}
+}//nice
