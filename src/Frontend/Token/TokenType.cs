@@ -7,33 +7,36 @@ using System.Text;
 
 namespace trilc
 {
-    enum TokenType
+    public enum TokenType
     {
+        Unknown,
         EOF,
-        Keyword,
-        BlockStart,
-        BlockEnd,
-        ID,
-        NUM,
-        Plus,
-        Inc,
-        Minus,
-        Decrease,
-        LineCom,
-        ComStart,
-        ComEnd,
-        Assignment,
-        Equal,
-        NotEqual,
-        Not,
-        SemiColon,
-        String,
+
+        //Literal
+        ID, NUM, String,
+
         Dot,
-        ArrSta,
-        ArrEnd,
-        ParSta,
-        ParEnd,
-        EOL,
-        SOF,
+        SemiColon,
+        Colon,
+        Plus,Increase,
+        Minus,Decrease,
+        //=
+        Assignment,
+        Asterisk,
+        Slash,
+        
+        //Pairs
+        BlockStart, BlockEnd,
+        ComStart, ComEnd,
+        ArrSta, ArrEnd,
+        ParSta, ParEnd,
+
+        //Booleans
+        Equal, NotEqual, Not, True, False,Greater, GreaterEq, Lesser, LesserEq,
+
+        //Keywords
+        PublicFunc, PrivateFunc, Use, VOID, INT, BOOL, Func
+        
+        
     }
 }

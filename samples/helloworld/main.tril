@@ -1,0 +1,12 @@
+..hello hi nice
+..oo hi
+
+{
+    use System;
+    ..nice
+
+    main:null = pb(cmdargs:[string]){
+        console: Output = Output.Console();
+        console.Write("Hello World from Tril!");
+    }
+}

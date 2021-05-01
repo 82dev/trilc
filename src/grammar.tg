@@ -1,0 +1,11 @@
+program ]> stmt* EOF
+
+stmt ]> block
+     |  dec
+     |  newAss
+     |  ';'
+
+block ]> '{'
+            stmt*
+         '}'
+

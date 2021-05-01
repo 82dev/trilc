@@ -1,0 +1,18 @@
+use System;
+
+main:void = fn(cmdargs: [string]){
+    Output.Console.WriteLine(foo(bar1)); // prints 1
+    Output.Console.WriteLine(foo(bar)); //prints -1
+}
+
+bar1:void = fn(){}
+
+foo:int = fn(bar: func){
+    try{
+        bar();
+        return 1;
+    }
+    catch{
+        return -1;
+    }
+}

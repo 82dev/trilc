@@ -1,33 +1,68 @@
 using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace trilc
 {
     class Parser
     {
-        public AST parse(Token[] tokens){
-            string state = string.Empty;
-            for (int i = 0; i < tokens.Length; i++)
-            {
-                Token token = tokens[i];
+        Token cur{get => tokens[index];}
+        int index = 0;
+        Token[] tokens;
 
-                // if(token.tokenType == TokenType.EOL){
-                //     state = string.Empty;
-                //     temp.RemoveRange(1,tmp);
-                // }
-                // if(token.tokenType == TokenType.LineCom){
-                //     state = "comment";
-                // }
-                // if(state == "comment"){
-                //     tmp++;
-                // }
-                
+        bool isEOF() => cur.tokenType == TokenType.EOF;
+        Token peek(int i) => tokens[index + i];
+        Token previous() => peek(-1);
+
+        Token advance(){
+            if(!isEOF()){
+                index++;
             }
+            return previous();
+        }
 
-            return new AST();
+        bool match(params TokenType[] token){
+            foreach (var item in token)
+            {
+                if(check(item)){
+                    advance();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool check(TokenType type){
+            if(isEOF()){
+                return false;
+            }
+            return cur.tokenType == type;
+        }
+
+        public Parser(string fileText)
+        {
+            tokens = new Lexer().lex(fileText);
+        }
+
+        public Stmt.Program parse(){
+            return program();
+        }
+
+        Stmt.Program program()
+        {
+            List<Stmt> stmts = new List<Stmt>();
+            while (!match(TokenType.EOF))
+            {
+                stmts.Add(stmt());
+            }
+            return new Stmt.Program(stmts);
+        }
+
+        // Stmt.Block block(){
+
+        // }
+
+        Stmt stmt(){
+            return null;
         }
     }
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\src.csproj": {}
+    "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\src.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\src.csproj": {
+    "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\src.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\src.csproj",
+        "projectUniqueName": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\src.csproj",
         "projectName": "src",
-        "projectPath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\src.csproj",
+        "projectPath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\src.csproj",
         "packagesPath": "C:\\Users\\Rishabh Shah\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\trilc\\src\\obj\\",
+        "outputPath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"
@@ -62,7 +62,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.407\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.408\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -9,34 +9,66 @@ namespace trilc
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            Add add = new Add();
-            Sub sub = new Sub();
-            Mul mul = new Mul();
-            Div div = new Div();
+            int exit = 0;
 
-            string path = Path.Combine(Directory.GetParent(Environment.CurrentDirectory).ToString(), @"grammar\example.tril");
-            path = Path.Combine(Environment.CurrentDirectory, @"test.tril");
-
-            Lexer lexer = new Lexer();
-            Parser parser = new Parser();
-            parser.parse(lexer.lex(File.ReadAllLines(Directory.GetParent(args[0]).ToString() + "\\helloworld.tril")));
-
-            foreach(var item in lexer.lex(File.ReadAllLines(path))){
-                Console.Write("Type: " + item.tokenType);
-                if(!string.IsNullOrEmpty(item.value)){
-                    Console.Write(" Value: " + item.value);
-                }
-                Console.Write("\n");
-            }
-
+            //get the metadat required from the .tmd
+            Dictionary<string, object> metadata = new Dictionary<string, object>();
             if(args[0] != null){
-                string json = File.ReadAllText(args[0]);
-                Dictionary<string, string> metadata = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                string json = File.ReadAllText(Path.Join(args[0], ".tmd"));
+                metadata = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            }
+            else
+            {
+                System.Console.WriteLine("Correct usage: trilc 'path to folder with Tril project'");
+                Environment.Exit(0);
             }
 
-            Console.ReadLine();
+            if(!metadata.ContainsKey("entryfile")){
+                System.Console.WriteLine("entryfile not provided defualting to main.tril");
+                metadata.Add("entryfile", "main");
+            }
+
+            if(metadata.ContainsKey("deps")){
+                Newtonsoft.Json.Linq.JArray arr = (Newtonsoft.Json.Linq.JArray)metadata["deps"];
+                List<string> t = new List<string>();
+                foreach (var item in arr)
+                {
+                    t.Add(item.ToString());
+                }
+            }
+
+            string fileText;
+
+            try
+            {
+                fileText = File.ReadAllText(args[0]
+                                        + "\\"
+                                        + metadata["entryfile"]
+                                        + ".tril");
+            }
+            catch (FileNotFoundException)
+            {
+                System.Console.WriteLine($"The entryfile in '"+Path.Join(args[0], ".tmd")+"' is not a valid file. Compilation terminated");
+                exit = -1;
+                goto Done;
+            } 
+
+            string flags = "-n";
+            if(args[1] != null){
+                flags = args[1];
+            }
+
+            // Parser parser = new Parser(fileText);
+            // var prog = parser.parse();
+            // Semantics.check(prog);
+
+            Done:;
+            #if DEBUG
+                Console.ReadLine();
+            #endif
+            return exit;
         }
     }
 }
