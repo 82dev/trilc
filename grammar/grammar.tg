@@ -11,10 +11,16 @@ block ]> '{'
 
 expr ]> term
 
-term ]> term ('+'|'-' factor)*
+term ]> factor ('+'|'-' factor)*
      |  factor
 
-factor ]> factor ('*'|'/' primary)*
+factor ]> unary ('*'|'/' unary)*
        |  primary
 
+unary ]> ('!'|'-') unary
+      |  primary
+
 primary ]> NUM
+        |  TRUE
+        |  FALSE
+        |  STRING

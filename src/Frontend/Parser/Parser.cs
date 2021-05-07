@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using static trilc.TokenType;
+using static trilc.Stmt;
 
 namespace trilc
 {
@@ -64,6 +66,11 @@ namespace trilc
                 throw new ParseException();
             }
             return true;
+        }
+
+        ParseException error(string err){
+            Error.assert(err);
+            return new ParseException();
         }
 
         public Parser(Token[] t)
@@ -132,69 +139,75 @@ namespace trilc
             return equality();
         }
 
-        public Stmt.Expr equality(){
-            Stmt.Expr e = comparision();
-            if(match(TokenType.Equal)||match(TokenType.NotEqual)){
+        Stmt.Expr equality(){
+            Expr expr = comparision();
+            while (match(TokenType.NotEqual, TokenType.Equal)){
+                var op = previous();
+                expr = new Expr.Binary(expr, op, comparision());
+            }
+            return expr;
+        }
+
+        Expr comparision() {
+            Expr expr = term();
+            while (match(Greater, GreaterEq, Lesser, LesserEq)) {
                 Token op = previous();
-                Stmt.Expr right = expr();
-                e = new Stmt.Expr.Binary(e, op, right);
+                expr = new Expr.Binary(expr, op, term());
             }
-            return e;
+            return expr;
         }
 
-        public Stmt.Expr comparision(){
-            Stmt.Expr e = term();
-            if(match(TokenType.Greater)||match(TokenType.GreaterEq)
-               ||match(TokenType.Lesser)||match(TokenType.LesserEq)){
+        private Expr term()
+        {
+            Expr expr = factor();
+            while (match(Plus, Minus)){
                 Token op = previous();
-                Stmt.Expr right = term();
-                e = new Stmt.Expr.Binary(e, op, right);
+                expr = new Expr.Binary(expr, op, factor());
             }
-            return e;
+            return expr;
         }
 
-        public Stmt.Expr term(){
-            Stmt.Expr e = factor();
-            if(match(TokenType.Plus)||match(TokenType.Minus)){
+        private Expr factor()
+        {
+            Expr expr = unary();
+            while (match(Asterisk, Slash)){
                 Token op = previous();
-                Stmt.Expr right = factor();
-                e = new Stmt.Expr.Binary(e, op, right);
+                expr = new Expr.Binary(expr, op, unary());
             }
-            return e;
+            return expr;
         }
 
-        public Stmt.Expr factor(){
-            Stmt.Expr e = unary();
-            if(match(TokenType.Asterisk)||match(TokenType.Slash)){
+        private Expr unary()
+        {
+            if(match(Not, Minus)){
                 Token op = previous();
-                Stmt.Expr right = unary();
-                e = new Stmt.Expr.Binary(e, op, right);
+                return new Expr.Unary(op, unary());
             }
-            return e;
+            return primary();
         }
 
-        public Stmt.Expr unary(){
-            if(match(TokenType.Not) || match(TokenType.Minus)){
-                Token op = previous();
-                Stmt.Expr e = unary();
-                return new Stmt.Expr.Unary(op, e);
+        private Expr primary()
+        {
+            if(match(True)){return new Expr.Literal(true);}
+            if(match(False)){return new Expr.Literal(false);}
+
+            if(match(NUM)){
+                return new Expr.Literal(int.Parse(previous().value));
             }
 
-            return literal();
+            if(match(TokenType.String)){
+                return new Expr.Literal(previous().value);
+            }
+
+            if(match(ParSta)){
+                Expr e = expr();
+                expect("Expect ')' after expression!", ParEnd);
+                return new Expr.Grouping(e);
+            }
+
+            throw error("Expect expression!");
         }
 
-        public Stmt.Expr literal(){
-            Token now = cur;
-            if(match(TokenType.NUM)){
-                return new Stmt.Expr.Literal(int.Parse(now.value));
-            }
-            if(match(TokenType.ParSta)){
-                Stmt.Expr e = expr() as Stmt.Expr;
-                expect("Expect ')' after expression", TokenType.ParEnd);
-                return new Stmt.Expr.Grouping(e);
-            }
-            return null;
-        }
         #endregion
 
         bool newVar(){
