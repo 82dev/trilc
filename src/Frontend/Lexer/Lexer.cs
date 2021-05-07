@@ -16,8 +16,8 @@ namespace trilc
             {"false", TokenType.False},
             {"fn", TokenType.Func},
             {"void", TokenType.VOID},
-            {"int", TokenType.INT},
-            {"bool", TokenType.BOOL},
+            // {"int", TokenType.INT},
+            // {"bool", TokenType.BOOL},
         };
         static char[] seps = " =+/-*!{}[]().;:\'\"<>\n".ToCharArray();
         static Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
@@ -93,13 +93,15 @@ namespace trilc
                         case '+':{ 
                             if(expect(1, '+')){
                                 addToken(TokenType.Increase, "++");
+                                break;
                             }
-                            addToken(TokenType.Plus);
+                            addToken(TokenType.Plus, "+");
                             break;
                         }
                         case '-':{ 
                             if(expect(1, '-')){
                                 addToken(TokenType.Decrease, "--");
+                                break;
                             }
                             addToken(TokenType.Minus);
                             break;
@@ -107,6 +109,7 @@ namespace trilc
                         case '=':{
                             if(expect(1, '=')){
                                 addToken(TokenType.Equal, "==");
+                                break;
                             }
                             addToken(TokenType.Assignment, "=");
                             break;
@@ -139,6 +142,7 @@ namespace trilc
                         case '>':{
                             if(expect(1, '=')){
                                 addToken(TokenType.GreaterEq, ">=");
+                                break;
                             }
                             addToken(TokenType.Greater);
                             break;
@@ -146,13 +150,15 @@ namespace trilc
                         case '<':{
                             if(expect(1, '=')){
                                 addToken(TokenType.LesserEq, "<=");
+                                break;
                             }
                             addToken(TokenType.Lesser);
                             break;
                         }
                         case '!':{
                             if(expect(1, '=')){
-                                addToken(TokenType.NotEqual, ">=");
+                                addToken(TokenType.NotEqual, "!=");
+                                break;
                             }
                             addToken(TokenType.Not);
                             break;
@@ -188,4 +194,4 @@ namespace trilc
             }
         #endregion
     }
-}//nice
+}

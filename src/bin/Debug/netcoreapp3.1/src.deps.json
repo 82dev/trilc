@@ -8,17 +8,17 @@
     ".NETCoreApp,Version=v3.1": {
       "src/1.0.0": {
         "dependencies": {
-          "Newtonsoft.Json": "12.0.3"
+          "fastJSON": "2.4.0.4"
         },
         "runtime": {
           "src.dll": {}
         }
       },
-      "Newtonsoft.Json/12.0.3": {
+      "fastJSON/2.4.0.4": {
         "runtime": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {
-            "assemblyVersion": "12.0.0.0",
-            "fileVersion": "12.0.3.23909"
+          "lib/netstandard2.0/fastJSON.dll": {
+            "assemblyVersion": "2.4.0.0",
+            "fileVersion": "2.4.0.4"
           }
         }
       }
@@ -30,12 +30,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Newtonsoft.Json/12.0.3": {
+    "fastJSON/2.4.0.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
-      "path": "newtonsoft.json/12.0.3",
-      "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
+      "sha512": "sha512-lbxY+miTOvCNbNfOk8HcbmBD9F6wv2dRKZlMjtJBm6rjA5vFKXBYtR6eoIe96HnCHOE1nCJbMsaZDKGNPg5mIA==",
+      "path": "fastjson/2.4.0.4",
+      "hashPath": "fastjson.2.4.0.4.nupkg.sha512"
     }
   }
 }

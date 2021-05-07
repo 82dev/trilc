@@ -1,12 +1,5 @@
-..hello hi nice
-..oo hi
+//comment
 
-{
-    use System;
-    ..nice
-
-    main:null = pb(cmdargs:[string]){
-        console: Output = Output.Console();
-        console.Write("Hello World from Tril!");
-    }
+main: null = fn(cmdargs: [string]){
+    System.Output.Console.WriteLine("Hello World from Tril !");
 }

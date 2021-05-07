@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "XlVKgcnOVewupgKY38DcC+VE2QAk+WSCuGMgxfseKJwfbNkuuPfWHqXPkg8Aag3JOfRQ2rEdE7Q7U1HEChTlZg==",
+  "dgSpecHash": "FWG4dlWsPDgLVLrfVm3Szqt+sYZtRNLhrJRorRNWP6TvUJAvSvqa8Bhk05vv+LJIvbDN8LP7kUexajvwCceYYw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Rishabh Shah\\Desktop\\codeProjects\\Tril\\trilc\\src\\src.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Rishabh Shah\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+    "C:\\Users\\Rishabh Shah\\.nuget\\packages\\fastjson\\2.4.0.4\\fastjson.2.4.0.4.nupkg.sha512"
   ],
   "logs": []
 }

@@ -32,7 +32,7 @@ namespace trilc
         private static void checkNewAssign(Stmt.newAssign newAssign){
             TrilType type = fromExpr(newAssign.value);
             if(!type.same(TrilType.TYPE.getChild(newAssign.type.value))){
-                new Error($"Error ({newAssign.type.lineIndex}, {newAssign.type.charIndex})! cannot convert expression to type '{newAssign.type.value}'");
+                Error.assert($"Error ({newAssign.type.lineIndex}, {newAssign.type.charIndex})! cannot convert expression to type '{newAssign.type.value}'");
                 throw new TypeException();
             }
         }
@@ -44,7 +44,7 @@ namespace trilc
                     case TokenType.Equal:
                     case TokenType.NotEqual: 
                         if(!TypeChecker.fromExpr(bin.left).same(TypeChecker.fromExpr(bin.right))){
-                            new Error($"Error ({bin.op.lineIndex}, {bin.op.charIndex})! Both operands should be same");
+                            Error.assert($"Error ({bin.op.lineIndex}, {bin.op.charIndex})! Both operands should be same");
                             throw new TypeException();
                         }
                         return TrilType.TYPE.getChild("bool");
@@ -59,7 +59,7 @@ namespace trilc
                             return TrilType.TYPE.getChild("int");
                         }
 
-                        new Error($"Error ({bin.op.lineIndex}, {bin.op.charIndex})! Both operads should be int");
+                        Error.assert($"Error ({bin.op.lineIndex}, {bin.op.charIndex})! Both operads should be int");
                         throw new TypeException();
                         break;
 
@@ -71,7 +71,7 @@ namespace trilc
                         && TypeChecker.fromExpr(bin.right).same(TrilType.TYPE.getChild("int"))){
                             return TrilType.TYPE.getChild("bool");
                         }
-                        new Error($"Error ({bin.op.lineIndex}, {bin.op.charIndex})! Both operads should be int");
+                        Error.assert($"Error ({bin.op.lineIndex}, {bin.op.charIndex})! Both operads should be int");
                         throw new TypeException();
                         break;
 

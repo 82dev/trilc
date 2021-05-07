@@ -4,11 +4,11 @@ namespace trilc
 {
     public abstract class Stmt
     {
-        public class Program : Block
+        public class Program
         {
             public List<Stmt> children;
 
-            public Program(List<Stmt> t) : base(t){
+            public Program(List<Stmt> t){
                 children = t;
             }
         }

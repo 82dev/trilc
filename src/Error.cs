@@ -4,8 +4,7 @@ namespace trilc
 
     class Error
     {
-        public Error(string str)
-        {
+        public static void assert(string str){
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(str);
             Console.ResetColor();

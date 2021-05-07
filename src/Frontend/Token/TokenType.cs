@@ -9,7 +9,6 @@ namespace trilc
 {
     public enum TokenType
     {
-        Unknown,
         EOF,
 
         //Literal
@@ -35,8 +34,6 @@ namespace trilc
         Equal, NotEqual, Not, True, False,Greater, GreaterEq, Lesser, LesserEq,
 
         //Keywords
-        PublicFunc, PrivateFunc, Use, VOID, INT, BOOL, Func
-        
-        
+        Use, VOID, INT, BOOL, Func,   
     }
 }

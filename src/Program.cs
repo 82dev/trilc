@@ -3,7 +3,8 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using fastJSON;
+using System.Diagnostics;
 
 namespace trilc
 {
@@ -11,13 +12,19 @@ namespace trilc
     {
         static int Main(string[] args)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             int exit = 0;
 
-            //get the metadat required from the .tmd
+            #region MD
+            //get the metadata required from the .tmd
             Dictionary<string, object> metadata = new Dictionary<string, object>();
             if(args[0] != null){
                 string json = File.ReadAllText(Path.Join(args[0], ".tmd"));
-                metadata = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                // metadata = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+                metadata = (Dictionary<string , object>) fastJSON.JSON.Parse(json);
+                stopwatch.Stop();
+                Debug.assert($"Processed json in {stopwatch.ElapsedMilliseconds}ms");
+                stopwatch = Stopwatch.StartNew();
             }
             else
             {
@@ -31,8 +38,9 @@ namespace trilc
             }
 
             if(metadata.ContainsKey("deps")){
-                Newtonsoft.Json.Linq.JArray arr = (Newtonsoft.Json.Linq.JArray)metadata["deps"];
+                var arr = (List<object>)metadata["deps"];
                 List<string> t = new List<string>();
+
                 foreach (var item in arr)
                 {
                     t.Add(item.ToString());
@@ -59,10 +67,19 @@ namespace trilc
             if(args[1] != null){
                 flags = args[1];
             }
+            #endregion
+            
+            // var a = 6 == 5 == 4 ==4;
 
-            // Parser parser = new Parser(fileText);
-            // var prog = parser.parse();
-            // Semantics.check(prog);
+            Token[] tokens = new Lexer().lex(fileText.Replace("\r", string.Empty));
+            stopwatch.Stop();
+            Debug.assert($"Lexer finished in {stopwatch.ElapsedMilliseconds}ms");
+            stopwatch = Stopwatch.StartNew();
+
+            Parser parser = new Parser(tokens);
+            var a = parser.parse();
+            stopwatch.Stop();
+            Debug.assert($"Parser finished in {stopwatch.ElapsedMilliseconds}ms");
 
             Done:;
             #if DEBUG

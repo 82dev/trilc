@@ -24,9 +24,20 @@ namespace trilc
         public Token(TokenType tt, Int16 i, Int16 c)
         {
             this.tokenType = tt;
-            this.value = "";
+            this.value = null;
             this.lineIndex = i;
             this.charIndex = c;
+        }
+
+        public override string ToString()
+        {
+            if(value != null){
+                return this.value;
+            }
+            if(tokenType == TokenType.EOF){
+                return "EOF";
+            }
+            return base.ToString();
         }
     }
 }

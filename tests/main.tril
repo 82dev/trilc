@@ -1,5 +1,1 @@
-use System;
-
-main: void = fn(cmdargs: [string]){
-    Output.Console.WriteLine("Hello!");
-}
+x: int = 4/2/3;

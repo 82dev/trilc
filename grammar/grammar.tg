@@ -1,0 +1,20 @@
+program ]> stmt* EOF
+
+stmt ]> block
+     |  dec
+     |  newAss
+     |  ';'
+
+block ]> '{'
+            stmt*
+         '}'
+
+expr ]> term
+
+term ]> term ('+'|'-' factor)*
+     |  factor
+
+factor ]> factor ('*'|'/' primary)*
+       |  primary
+
+primary ]> NUM
