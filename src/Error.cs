@@ -23,12 +23,12 @@ namespace trilc
     }
 
     [System.Serializable]
-    public class TypeException : System.Exception
+    public class SemanticException : System.Exception
     {
-        public TypeException() { }
-        public TypeException(string message) : base(message) { }
-        public TypeException(string message, System.Exception inner) : base(message, inner) { }
-        protected TypeException(
+        public SemanticException() { }
+        public SemanticException(string message) : base(message) { }
+        public SemanticException(string message, System.Exception inner) : base(message, inner) { }
+        protected SemanticException(
             System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }

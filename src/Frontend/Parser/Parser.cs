@@ -89,9 +89,7 @@ namespace trilc
             while (!isEOF())
             {
                 var a = stmt();
-                if(a != null){
-                    stmts.Add(a);
-                }
+                stmts.Add(a);
             }
             return new Stmt.Program(stmts);
         }
@@ -109,7 +107,7 @@ namespace trilc
             try
             {
                 if(newVar()){
-                    return newAss();
+                    return Variable();
                 }
                 if(match(TokenType.BlockStart)){
                     return block();
@@ -122,16 +120,18 @@ namespace trilc
             {
                 synchronize();
             }
-            return null;
+            throw new ParseException();
         }
 
-        Stmt.newAssign newAss(){
+        Stmt.Var Variable(){
             string n = peek(-3).value;
             Token t = previous();
-            expect($"Expect '=' after '{n}:{t}'",TokenType.Assignment);
-            var e = expr();
+            Expr e = null;
+            if(match(Assignment)){
+                e = expr();
+            }
             expect("Expect ';'!", TokenType.SemiColon);
-            return new Stmt.newAssign(n,e,t);
+            return new Stmt.Var(n,e,t);
         }
 
         #region Expressions
@@ -188,15 +188,19 @@ namespace trilc
 
         private Expr primary()
         {
-            if(match(True)){return new Expr.Literal(true);}
-            if(match(False)){return new Expr.Literal(false);}
+            if(match(True)){return new Expr.Literal<bool>.boolLiteral(true);}
+            if(match(False)){return new Expr.Literal<bool>.boolLiteral(false);}
 
             if(match(NUM)){
-                return new Expr.Literal(int.Parse(previous().value));
+                return new Expr.Literal<int>.intLiteral(int.Parse(previous().value));
             }
 
             if(match(TokenType.String)){
-                return new Expr.Literal(previous().value);
+                return new Expr.Literal<string>.stringLiteral(previous().value);
+            }
+
+            if(match(TokenType.ID)){
+                return new Expr.Literal<string>.varLiteral(previous().value);
             }
 
             if(match(ParSta)){
@@ -213,7 +217,7 @@ namespace trilc
         bool newVar(){
             if(match(TokenType.ID)){
                 if(match(TokenType.Colon)){
-                    if(match(TokenType.ID)){
+                    if(match(TokenType.INT) || match(TokenType.BOOL)){
                         return true;
                     }
                 }

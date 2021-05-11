@@ -1,9 +1,10 @@
 program ]> stmt* EOF
 
 stmt ]> block
-     |  dec
-     |  newAss
+     |  var
      |  ';'
+
+var ]> ID ':' (INT | BOOL) ('=' expr)? ';'
 
 block ]> '{'
             stmt*

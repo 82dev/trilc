@@ -32,12 +32,12 @@ namespace trilc
         public override string ToString()
         {
             if(value != null){
-                return this.value;
+                return this.value + $"  Type: {Enum.GetName(typeof(TokenType), tokenType)}";
             }
             if(tokenType == TokenType.EOF){
                 return "EOF";
             }
-            return base.ToString();
+            return $"Type: {Enum.GetName(typeof(TokenType), tokenType)}";
         }
     }
 }

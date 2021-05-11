@@ -29,11 +29,11 @@ namespace trilc
             }
         }
 
-        public class newAssign : Stmt{
+        public class Var : Stmt{
             public string name;
             public Stmt.Expr value;
             public Token type;
-            public newAssign(string n, Stmt.Expr v, Token t)
+            public Var(string n, Stmt.Expr v, Token t)
             {
                 (name,value, type) = (n,v,t);
             }
@@ -74,12 +74,39 @@ namespace trilc
                 }
             }
 
-            public class Literal : Expr{
-                public object value;
+            public abstract class Literal<T> : Expr{
+                public T value;
 
-                public Literal(object value)
+                public class boolLiteral : Literal<bool>
                 {
-                    this.value = value;
+                    public boolLiteral(bool b)
+                    {
+                        value = b;
+                    }
+                }
+
+                public class intLiteral : Literal<int>
+                {
+                    public intLiteral(int i)
+                    {
+                        value = i;
+                    }
+                }
+
+                public class stringLiteral : Literal<string>
+                {
+                    public stringLiteral(string s)
+                    {
+                        value = s;
+                    }
+                }
+
+                public class varLiteral : Literal<string>
+                {
+                    public varLiteral(string name)
+                    {
+                        value = name;
+                    }
                 }
             }
         }

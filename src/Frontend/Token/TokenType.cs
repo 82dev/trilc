@@ -34,6 +34,6 @@ namespace trilc
         Equal, NotEqual, Not, True, False,Greater, GreaterEq, Lesser, LesserEq,
 
         //Keywords
-        Use, VOID, INT, BOOL, Func,   
+        Use, VOID, INT, BOOL, Func, Ensure
     }
 }

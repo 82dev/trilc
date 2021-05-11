@@ -12,6 +12,7 @@ namespace trilc
     {
         static int Main(string[] args)
         {
+            bool hadError = false;
             Stopwatch stopwatch = Stopwatch.StartNew();
             int exit = 0;
 
@@ -29,7 +30,7 @@ namespace trilc
             else
             {
                 System.Console.WriteLine("Correct usage: trilc 'path to folder with Tril project'");
-                Environment.Exit(0);
+                System.Environment.Exit(0);
             }
 
             if(!metadata.ContainsKey("entryfile")){
@@ -77,11 +78,20 @@ namespace trilc
             stopwatch = Stopwatch.StartNew();
 
             Parser parser = new Parser(tokens);
-            var a = parser.parse();
+            var AST = parser.parse();
             stopwatch.Stop();
             Debug.assert($"Parser finished in {stopwatch.ElapsedMilliseconds}ms");
 
-            Done:;
+            SemanticChecker semanticChecker = new SemanticChecker(AST);
+                
+            try{
+                semanticChecker.Check();
+            }
+            catch{
+                hadError = true;
+            }
+
+            Done:;  
             #if DEBUG
                 Console.ReadLine();
             #endif

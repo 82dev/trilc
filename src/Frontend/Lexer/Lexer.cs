@@ -16,8 +16,9 @@ namespace trilc
             {"false", TokenType.False},
             {"fn", TokenType.Func},
             {"void", TokenType.VOID},
-            // {"int", TokenType.INT},
-            // {"bool", TokenType.BOOL},
+            {"int", TokenType.INT},
+            {"bool", TokenType.BOOL},
+            {"ensure", TokenType.Ensure},
         };
         static char[] seps = " =+/-*!{}[]().;:\'\"<>\n".ToCharArray();
         static Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
@@ -103,7 +104,7 @@ namespace trilc
                                 addToken(TokenType.Decrease, "--");
                                 break;
                             }
-                            addToken(TokenType.Minus);
+                            addToken(TokenType.Minus, "-");
                             break;
                         }
                         case '=':{
@@ -117,7 +118,7 @@ namespace trilc
                         case '/':{
                             if(expect(1, '/')){
                                 int tmp = i;
-                                while (source[tmp] != '\n' || tmp >= source.Length)
+                                while (tmp >= source.Length && source[tmp] != '\n')
                                 {
                                     tmp++;
                                 }
@@ -130,11 +131,24 @@ namespace trilc
                         case '\"':{
                             string tmp = string.Empty;
                             int j = i+1;
-                            while (source[j] != '\"')
+                            try
                             {
-                                tmp += source[j];
-                                j++;
+                                while ((source[j] != '\"'))
+                                {
+                                    if(source[j] == '\n'){
+                                        Error.assert("Unclosed string!");
+                                        goto Done;
+                                    }
+                                    tmp += source[j];
+                                    j++;
+                                }
                             }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Error.assert("Unclosed string!");
+                                goto Done;
+                            }
+                                
                             i = j;
                             addToken(TokenType.String, tmp);
                             break;
@@ -144,7 +158,7 @@ namespace trilc
                                 addToken(TokenType.GreaterEq, ">=");
                                 break;
                             }
-                            addToken(TokenType.Greater);
+                            addToken(TokenType.Greater, ">");
                             break;
                         }
                         case '<':{
@@ -152,7 +166,7 @@ namespace trilc
                                 addToken(TokenType.LesserEq, "<=");
                                 break;
                             }
-                            addToken(TokenType.Lesser);
+                            addToken(TokenType.Lesser, "<");
                             break;
                         }
                         case '!':{
@@ -160,7 +174,7 @@ namespace trilc
                                 addToken(TokenType.NotEqual, "!=");
                                 break;
                             }
-                            addToken(TokenType.Not);
+                            addToken(TokenType.Not, "!");
                             break;
                         }
 
@@ -175,7 +189,34 @@ namespace trilc
 
                     buffer = string.Empty;
                 }
+                
+                Done:;
                 i++;
+            }
+
+            if(buffer.Replace("\n", "").Replace("\r","") != string.Empty){
+                switch (buffer)
+                {
+                    default:
+                        if(stringTokenDict.ContainsKey(buffer)){
+                            addToken(stringTokenDict[buffer], buffer);
+                            break;
+                        }
+
+                        string temp = buffer;
+                        if(temp.isNumber()){
+                            addToken(TokenType.NUM, buffer);
+                            break;
+                        }
+                        
+                        if(!(string.IsNullOrEmpty(buffer)) ||
+                            !(string.IsNullOrWhiteSpace(buffer))){
+                            addToken(TokenType.ID, buffer);
+                        }
+
+                        break;
+                }
+                buffer = string.Empty;
             }
 
             addToken(TokenType.EOF, null);
