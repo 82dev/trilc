@@ -89,7 +89,8 @@ namespace trilc
             while (!isEOF())
             {
                 var a = stmt();
-                stmts.Add(a);
+                if(a != null)
+                    stmts.Add(a);
             }
             return new Stmt.Program(stmts);
         }
@@ -98,7 +99,9 @@ namespace trilc
             List<Stmt> stmts = new List<Stmt>();
             while (!match(TokenType.BlockEnd))
             {
-                stmts.Add(stmt());
+                var a = stmt();
+                if(a != null)
+                    stmts.Add(a);
             }
             return new Stmt.Block(stmts);
         }
@@ -120,7 +123,7 @@ namespace trilc
             {
                 synchronize();
             }
-            throw new ParseException();
+            return null;
         }
 
         Stmt.Var Variable(){
@@ -172,8 +175,13 @@ namespace trilc
             Expr expr = unary();
             while (match(Asterisk, Slash)){
                 Token op = previous();
+
                 expr = new Expr.Binary(expr, op, unary());
             }
+            if((expr is Expr.Binary eb)&&((eb.right is Expr.Literal<int> a)&&(a.value == 0))){
+                throw error("Cannot divide by 0!");
+            }
+
             return expr;
         }
 
