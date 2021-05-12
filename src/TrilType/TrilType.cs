@@ -3,10 +3,15 @@ namespace trilc
 {
     class TrilType
     {
-        public static TrilType Object = new Object();
-        public static TrilType Int = new Int();
-        public static TrilType Bool = new Bool();
+        public static TrilType @object = new @object();
+        public static TrilType @int = new @int();
+        public static TrilType @bool = new @bool();
 
         public TrilType parent = null;
+
+        public override string ToString()
+        {
+            return this.GetType().Name;
+        }
     }
 }

@@ -1,1 +1,1 @@
-x: int = 3;
+x: bool = !!true;

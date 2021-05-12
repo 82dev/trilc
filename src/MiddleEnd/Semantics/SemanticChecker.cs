@@ -23,7 +23,14 @@ namespace trilc
 
         public void checkVar(Stmt.Var varStmt)
         {
-            fromExpr(varStmt.value);
+            TrilType exprType = fromExpr(varStmt.value);
+            TrilType tokT = fromToken(varStmt.type);
+
+            if(exprType != tokT){
+                throw error($"Cannot convert type '{exprType.ToString()}' to '{tokT.ToString()}'");
+                return;
+            }
+
             environment.define(varStmt.name, varStmt.type.ToString(), varStmt.value);
         }
 
@@ -33,30 +40,30 @@ namespace trilc
                 switch (bE.op.tokenType)
                 {
                     case TokenType.Plus:{
-                        if((fromExpr(bE.right) == TrilType.Int) &&
-                           (fromExpr(bE.left) == TrilType.Int)){
-                            return TrilType.Int;
+                        if((fromExpr(bE.right) == TrilType.@int) &&
+                           (fromExpr(bE.left) == TrilType.@int)){
+                            return TrilType.@int;
                         }
                         throw error("Operands of '+' should be integers");
                     }
                     case TokenType.Minus:{
-                        if((fromExpr(bE.right) == TrilType.Int) &&
-                           (fromExpr(bE.left) == TrilType.Int)){
-                            return TrilType.Int;
+                        if((fromExpr(bE.right) == TrilType.@int) &&
+                           (fromExpr(bE.left) == TrilType.@int)){
+                            return TrilType.@int;
                         }
                         throw error("Operands of '-' should be integers");
                     }
                     case TokenType.Asterisk:{
-                        if((fromExpr(bE.right) == TrilType.Int) &&
-                           (fromExpr(bE.left) == TrilType.Int)){
-                            return TrilType.Int;
+                        if((fromExpr(bE.right) == TrilType.@int) &&
+                           (fromExpr(bE.left) == TrilType.@int)){
+                            return TrilType.@int;
                         }
                         throw error("Operands of '*' should be integers");
                     }
                     case TokenType.Slash:{
-                        if((fromExpr(bE.right) == TrilType.Int) &&
-                           (fromExpr(bE.left) == TrilType.Int)){
-                            return TrilType.Int;
+                        if((fromExpr(bE.right) == TrilType.@int) &&
+                           (fromExpr(bE.left) == TrilType.@int)){
+                            return TrilType.@int;
                         }
                         throw error("Operands of '\\' should be integers");
                     }
@@ -73,13 +80,13 @@ namespace trilc
                 switch (u.op.tokenType)
                 {
                     case TokenType.Minus: 
-                        if(fromExpr(u.expr) == TrilType.Int){
-                            return TrilType.Int;
+                        if(fromExpr(u.expr) == TrilType.@int){
+                            return TrilType.@int;
                         }
                         throw error("Operand of '-' should be integer");
                     case TokenType.Not:
-                        if(fromExpr(u.expr) == TrilType.Bool){
-                            return TrilType.Bool;
+                        if(fromExpr(u.expr) == TrilType.@bool){
+                            return TrilType.@bool;
                         }
                         throw error("Operand of '!' should be a booleans");;
                     default:throw error("");
@@ -87,12 +94,16 @@ namespace trilc
             }
 
             if(expr is Stmt.Expr.Literal<int>.intLiteral){
-                return TrilType.Int;
+                return TrilType.@int;
             }
             if(expr is Stmt.Expr.Literal<bool>.boolLiteral){
-                return TrilType.Bool;
+                return TrilType.@bool;
             }
             throw error("");
+        }
+
+        public TrilType fromToken(Token tok){
+            return tok.tokenType == TokenType.INT ? TrilType.@int : TrilType.@bool;
         }
 
         public SemanticException error(string msg){

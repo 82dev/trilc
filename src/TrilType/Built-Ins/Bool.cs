@@ -1,10 +1,10 @@
 namespace trilc
 {
-    class Bool : Object
+    class @bool : @object
     {
-        public Bool()
+        public @bool()
         {
-            parent = TrilType.Object;
+            parent = TrilType.@object;
         }
     }
 }

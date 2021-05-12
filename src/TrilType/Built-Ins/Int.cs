@@ -1,10 +1,10 @@
 namespace trilc
 {
-    class Int : Object
+    class @int : @object
     {
-        public Int()
+        public @int()
         {
-            parent = TrilType.Object;
+            parent = TrilType.@object;
         }
     }
 }

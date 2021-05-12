@@ -1,7 +1,6 @@
 namespace trilc
 {
-    class Object : TrilType
+    class @object : TrilType
     {
-
     }
 }
