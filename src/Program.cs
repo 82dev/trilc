@@ -69,8 +69,6 @@ namespace trilc
                 flags = args[1];
             }
             #endregion
-            
-            // var a = 6 == 5 == 4 ==4;
 
             Token[] tokens = new Lexer().lex(fileText.Replace("\r", string.Empty));
             stopwatch.Stop();
@@ -82,14 +80,8 @@ namespace trilc
             stopwatch.Stop();
             Debug.assert($"Parser finished in {stopwatch.ElapsedMilliseconds}ms");
 
-            SemanticChecker semanticChecker = new SemanticChecker(AST);
-                
-            try{
-                semanticChecker.Check();
-            }
-            catch{
-                hadError = true;
-            }
+            var semanticChecker = new SemanticChecker();
+            semanticChecker.Check(AST.children, ref hadError);
 
             Done:;  
             #if DEBUG

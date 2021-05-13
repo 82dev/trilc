@@ -109,8 +109,13 @@ namespace trilc
         Stmt stmt(){
             try
             {
-                if(newVar()){
-                    return Variable();
+                if(match(ID)){
+                    if(match(Colon) && (match(INT, BOOL))){
+                        return Variable();
+                    }
+                    if(match(Assignment)){
+                        return ReAss();
+                    }
                 }
                 if(match(TokenType.BlockStart)){
                     return block();
@@ -135,6 +140,13 @@ namespace trilc
             }
             expect("Expect ';'!", TokenType.SemiColon);
             return new Stmt.Var(n,e,t);
+        }
+
+        Stmt.ReAss ReAss(){
+            string name = peek(-2).value;
+            var e = expr();
+            expect("Expect ';'!", SemiColon);
+            return new ReAss(name, e);
         }
 
         #region Expressions
@@ -221,17 +233,6 @@ namespace trilc
         }
 
         #endregion
-
-        bool newVar(){
-            if(match(TokenType.ID)){
-                if(match(TokenType.Colon)){
-                    if(match(TokenType.INT) || match(TokenType.BOOL)){
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
 
         #endregion
     }

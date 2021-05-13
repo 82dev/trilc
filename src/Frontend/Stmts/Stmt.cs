@@ -4,13 +4,9 @@ namespace trilc
 {
     public abstract class Stmt
     {
-        public class Program
+        public class Program : Block
         {
-            public List<Stmt> children;
-
-            public Program(List<Stmt> t){
-                children = t;
-            }
+            public Program(List<Stmt> t) : base(t){}
         }
 
         public class Block : Stmt
@@ -36,6 +32,15 @@ namespace trilc
             public Var(string n, Stmt.Expr v, Token t)
             {
                 (name,value, type) = (n,v,t);
+            }
+        }
+
+        public class ReAss : Stmt{
+            public string name;
+            public Stmt.Expr value;
+            public ReAss(string n, Stmt.Expr v){
+                name = n;
+                value = v;
             }
         }
 

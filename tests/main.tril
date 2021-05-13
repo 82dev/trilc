@@ -1,1 +1,5 @@
-x: bool = !!true;
+x: int = 3;
+{
+    x = 4;
+}
+y: int = x;
