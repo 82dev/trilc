@@ -3,11 +3,14 @@ program ]> stmt* EOF
 stmt ]> block
      |  var
      |  reAss
+     |  if
      |  ';'
 
 var ]> ID ':' (INT | BOOL) ('=' expr)? ';'
 
 reAss ]> ID '=' expr ';'
+
+if ]> 'if''(' expr ')' block
 
 block ]> '{'
             stmt*

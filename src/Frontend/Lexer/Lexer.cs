@@ -11,14 +11,15 @@ namespace trilc
     class Lexer
     {
         static Dictionary<string, TokenType> stringTokenDict = new Dictionary<string, TokenType>(){
-            {"use", TokenType.Use},
-            {"true", TokenType.True},
-            {"false", TokenType.False},
-            {"fn", TokenType.Func},
+            {"use", TokenType.USE},
+            {"true", TokenType.TRUE},
+            {"false", TokenType.FALSE},
+            {"fn", TokenType.FUNC},
             {"void", TokenType.VOID},
             {"int", TokenType.INT},
             {"bool", TokenType.BOOL},
-            {"ensure", TokenType.Ensure},
+            {"ensure", TokenType.ENSURE},
+            {"if", TokenType.IF},
         };
         static char[] seps = " =+/-*!{}[]().;:\'\"<>\n".ToCharArray();
         static Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){

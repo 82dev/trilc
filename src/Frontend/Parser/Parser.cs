@@ -100,8 +100,13 @@ namespace trilc
             while (!match(TokenType.BlockEnd))
             {
                 var a = stmt();
-                if(a != null)
+                if(a != null){
                     stmts.Add(a);
+                }
+                if(isEOF()){
+                    throw error("Expect '}'!");
+                }
+
             }
             return new Stmt.Block(stmts);
         }
@@ -123,6 +128,10 @@ namespace trilc
                 if(match(TokenType.SemiColon)){
                     return new Stmt.Empty();
                 }
+                if(match(TokenType.IF)){
+                    return ifStmt();
+                }
+            
             }
             catch (ParseException)
             {
@@ -141,12 +150,20 @@ namespace trilc
             expect("Expect ';'!", TokenType.SemiColon);
             return new Stmt.Var(n,e,t);
         }
-
         Stmt.ReAss ReAss(){
             string name = peek(-2).value;
             var e = expr();
             expect("Expect ';'!", SemiColon);
             return new ReAss(name, e);
+        }
+
+        Stmt.If ifStmt(){
+            expect("Expect '(' at the start of if!", TokenType.ParSta);
+            var e = expr();
+            expect("Expect ')' at the end of expression!", TokenType.ParEnd);
+            expect("Expect '{' after expression!", TokenType.BlockStart);
+            var b = block();
+            return new Stmt.If(e, b);
         }
 
         #region Expressions
@@ -208,8 +225,8 @@ namespace trilc
 
         private Expr primary()
         {
-            if(match(True)){return new Expr.Literal<bool>.boolLiteral(true);}
-            if(match(False)){return new Expr.Literal<bool>.boolLiteral(false);}
+            if(match(TRUE)){return new Expr.Literal<bool>.boolLiteral(true);}
+            if(match(FALSE)){return new Expr.Literal<bool>.boolLiteral(false);}
 
             if(match(NUM)){
                 return new Expr.Literal<int>.intLiteral(int.Parse(previous().value));

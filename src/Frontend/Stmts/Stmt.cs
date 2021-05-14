@@ -17,14 +17,6 @@ namespace trilc
             }   
         }
 
-        public class Dec : Stmt{
-            string name;
-            Token type;
-            public Dec(string n, Token t){
-                (name, type) = (n,t);
-            }
-        }
-
         public class Var : Stmt{
             public string name;
             public Stmt.Expr value;
@@ -34,13 +26,23 @@ namespace trilc
                 (name,value, type) = (n,v,t);
             }
         }
-
         public class ReAss : Stmt{
             public string name;
             public Stmt.Expr value;
             public ReAss(string n, Stmt.Expr v){
                 name = n;
                 value = v;
+            }
+        }
+
+        public class If : Stmt{
+            public Expr expr;
+            public Block body;
+
+            public If(Expr e, Block b)
+            {
+                expr = e;
+                body = b;
             }
         }
 

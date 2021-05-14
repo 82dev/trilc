@@ -13,19 +13,14 @@ namespace trilc
             {
                 try
                 {
-                    if(statements[i] is Stmt.Var varStmt){
-                        checkVar(varStmt);
-                    }
-                    if(statements[i] is Stmt.Block blockStmt){
-                        checkBlock(blockStmt, ref error);
-                    }
-                    if(statements[i] is Stmt.ReAss reAss){
-                        checkReAss(reAss);
-                    }
+                    if(statements[i] is Stmt.Var varStmt){checkVar(varStmt);}
+                    if(statements[i] is Stmt.Block blockStmt){checkBlock(blockStmt, ref error);}
+                    if(statements[i] is Stmt.ReAss reAss){checkReAss(reAss);}
+                    if(statements[i] is Stmt.If ifS){checkIf(ifS, ref error);}
                 }
                 catch (SemanticException)
                 {
-                    error = true;    
+                    error = true;
                 }
             }
         }
@@ -35,6 +30,7 @@ namespace trilc
             Check(block.children, ref error);
             environment = environment.enclosing;
         }
+
         void checkVar(Stmt.Var varStmt)
         {
             TrilType tokT = fromToken(varStmt.type);
@@ -44,16 +40,23 @@ namespace trilc
                     throw error($"Cannot convert type '{exprType.ToString()}' to '{tokT.ToString()}'");
                 }
             }
-            environment.define(varStmt.name, tokT.ToString(), varStmt.value);
+            environment.define(varStmt.name, tokT, varStmt.value);
         }
         void checkReAss(Stmt.ReAss reAss){
             var key = environment.getKey(reAss.name);
-            string type = key.type;
-            string exprT = fromExpr(reAss.value).ToString();
+            TrilType type = key.type;
+            TrilType exprT = fromExpr(reAss.value);
             if(type != exprT){
                 throw error($"Cannot convert '{exprT}' to '{type}'");
             }
             environment.reDefine(key, reAss.value);
+        }
+        void checkIf(Stmt.If ifStmt, ref bool err){
+            TrilType exprT = fromExpr(ifStmt.expr);
+            if(exprT != TrilType.@bool){
+                throw error("Expression must be a boolean!");
+            }
+            checkBlock(ifStmt.body, ref err);
         }
 
         TrilType fromExpr(Stmt.Expr expr)
@@ -71,6 +74,26 @@ namespace trilc
                         }
                         throw error($"Operands of '{bE.op.value}' should be integers");
                     }
+
+                    case TokenType.Greater:
+                    case TokenType.GreaterEq:
+                    case TokenType.Lesser:
+                    case TokenType.LesserEq:{
+                        if((fromExpr(bE.right) == TrilType.@int) &&
+                           (fromExpr(bE.left) == TrilType.@int)){
+                            return TrilType.@bool;
+                        }
+                        throw error($"Operands of '{bE.op.value}' should be integers");
+                    }
+
+                    case TokenType.Equal:
+                    case TokenType.NotEqual:{
+                        if(fromExpr(bE.right) == fromExpr(bE.left)){
+                            return TrilType.@bool;
+                        }
+                        throw error($"Operands of '{bE.op.value}' should be the same");
+                    }
+
                     default:
                         break;
                 }
@@ -78,6 +101,7 @@ namespace trilc
             
             if(expr is Stmt.Expr.Grouping g){
                 return fromExpr(g.expr);
+
             }
 
             if(expr is Stmt.Expr.Unary u){

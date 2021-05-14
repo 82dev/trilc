@@ -6,7 +6,7 @@ namespace trilc
 {
     class Environment
     {
-        Dictionary<(string name, string type), Stmt.Expr> values = new Dictionary<(string name, string type), Stmt.Expr>();
+        Dictionary<(string name, TrilType type), Stmt.Expr> values = new Dictionary<(string name, TrilType type), Stmt.Expr>();
         public Environment enclosing = null;
 
         public Environment(){}
@@ -15,7 +15,7 @@ namespace trilc
             enclosing = envr;
         }
 
-        public void define(string n, string t, Stmt.Expr e)
+        public void define(string n, TrilType t, Stmt.Expr e)
         {
             if(!has(n))
             {
@@ -25,7 +25,7 @@ namespace trilc
             throw error($"Variable '{n}' already exists!");
         }
 
-        public void reDefine((string name, string type) key, Stmt.Expr e){
+        public void reDefine((string name, TrilType type) key, Stmt.Expr e){
             if(enclosing != null && enclosing.has(key.name)){
                 enclosing.reDefine(key, e);
             }
@@ -62,7 +62,7 @@ namespace trilc
             throw error($"Variable '{n}' not found");     
         }
 
-        public (string name, string type) getKey(string n){
+        public (string name, TrilType type) getKey(string n){
             for (int i = 0; i < values.Keys.Count; i++)
             {
                 if(values.Keys.ToArray()[i].name == n){
