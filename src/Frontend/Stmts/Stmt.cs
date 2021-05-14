@@ -38,11 +38,20 @@ namespace trilc
         public class If : Stmt{
             public Expr expr;
             public Block body;
+            public Block elseBlock;
 
             public If(Expr e, Block b)
             {
                 expr = e;
                 body = b;
+                elseBlock = null;
+            }
+
+            public If(Expr e, Block b, Block elseB)
+            {
+                expr = e;
+                body = b;
+                elseBlock = elseB;
             }
         }
 

@@ -163,6 +163,11 @@ namespace trilc
             expect("Expect ')' at the end of expression!", TokenType.ParEnd);
             expect("Expect '{' after expression!", TokenType.BlockStart);
             var b = block();
+            if(match(TokenType.ELSE)){
+                expect("Expect '{' after else!", TokenType.BlockStart);
+                var eb = block();
+                return new Stmt.If(e, b, eb);
+            }
             return new Stmt.If(e, b);
         }
 

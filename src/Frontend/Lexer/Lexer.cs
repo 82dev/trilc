@@ -20,6 +20,7 @@ namespace trilc
             {"bool", TokenType.BOOL},
             {"ensure", TokenType.ENSURE},
             {"if", TokenType.IF},
+            {"else", TokenType.ELSE},
         };
         static char[] seps = " =+/-*!{}[]().;:\'\"<>\n".ToCharArray();
         static Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
