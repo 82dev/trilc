@@ -83,6 +83,13 @@ namespace trilc
             var semanticChecker = new SemanticChecker();
             semanticChecker.Check(AST.children, ref hadError);
 
+            if(!hadError){
+                var codeGen = new CodeGen();
+                Directory.CreateDirectory(Path.Join(args[0], "\\bin"));
+                File.Create(Path.Join(args[0], "\\bin\\output.tco")).Close();
+                Writer.write((Path.Join(args[0], "\\bin\\output.tco")),codeGen.genProg(AST));
+            }
+
             Done:;  
             #if DEBUG
                 Console.ReadLine();

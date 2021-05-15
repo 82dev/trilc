@@ -130,6 +130,9 @@ namespace trilc
             if(expr is Stmt.Expr.Literal<string>.varLiteral v){
                 return fromExpr(environment.get(v.value));
             }
+            if(expr is Stmt.Expr.Grouping gr){
+                return fromExpr(gr.expr);
+            }
 
             throw error("Unrecognized expression!");
         }

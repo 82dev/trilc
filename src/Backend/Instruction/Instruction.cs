@@ -3,16 +3,13 @@ namespace trilc
     class Instruction
     {
         public InstructionType type;
-        public object[] @params;
+        public int[] @params;
 
-        public Instruction(InstructionType t, object[] p)
+        public Instruction(InstructionType t, params int[] p)
         {
-            type = t;
-            @params = p;
+            this.type = t;
+            this.@params = p;
         }
 
-        public Instruction(InstructionType t){
-            type = t;
-        }
     }
 }

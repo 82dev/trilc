@@ -120,7 +120,7 @@ namespace trilc
                         case '/':{
                             if(expect(1, '/')){
                                 int tmp = i;
-                                while (tmp >= source.Length && source[tmp] != '\n')
+                                while (tmp < source.Length && source[tmp] != '\n')
                                 {
                                     tmp++;
                                 }

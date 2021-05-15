@@ -131,6 +131,7 @@ namespace trilc
                 if(match(TokenType.IF)){
                     return ifStmt();
                 }
+                throw error($"Unrecognized token '{cur.tokenType}'!");
             
             }
             catch (ParseException)
