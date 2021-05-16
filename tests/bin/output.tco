@@ -1,0 +1,11 @@
+push 4
+store 0
+push 5
+load 0
+gr
+jfal 9
+push 5
+load 0
+push 3
+load 0
+halt

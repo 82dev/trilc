@@ -38,6 +38,9 @@ namespace trilc
             instructions[b4 - 1] = new Instruction(InstructionType.jfal, 
                 (b4 + (instructions.Count - b4) + 1)
             );
+            if(ifStmt.elseBlock != null){
+                genBlock(ifStmt.elseBlock);
+            }
         }
         void genReAss(Stmt.ReAss reAss){
             genExpr(reAss.value);
