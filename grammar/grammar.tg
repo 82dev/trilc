@@ -4,29 +4,28 @@ stmt ]> block
      |  var
      |  reAss
      |  if
+     |  while
      |  ';'
 
-var ]> ID ':' (INT | BOOL) ('=' expr)? ';'
+while ]> 'while' '('expr')' block
 
+var ]> ID ':' (INT | BOOL) ('=' expr)? ';'
 reAss ]> ID '=' expr ';'
 
-if ]> 'if''(' expr ')' block
+if ]> 'if''(' expr ')' block (else)?
+else ]> 'else' block
 
 block ]> '{'
             stmt*
          '}'
 
 expr ]> term
-
 term ]> factor ('+'|'-' factor)*
      |  factor
-
 factor ]> unary ('*'|'/' unary)*
        |  primary
-
 unary ]> ('!'|'-') unary
       |  primary
-
 primary ]> NUM
         |  TRUE
         |  FALSE

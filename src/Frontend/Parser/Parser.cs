@@ -131,14 +131,24 @@ namespace trilc
                 if(match(TokenType.IF)){
                     return ifStmt();
                 }
+                if(match(TokenType.WHILE)){return whileLoop();}
+                
                 throw error($"Unrecognized token '{cur.tokenType}'!");
-            
             }
             catch (ParseException)
             {
                 synchronize();
             }
             return null;
+        }
+
+        Stmt.While whileLoop(){
+            expect("'(' after 'while'!", TokenType.ParSta);
+            Expr e = expr();
+            expect("')' after expression!", TokenType.ParEnd);
+            expect("'{' after expression!", TokenType.BlockStart);
+            Block b = block();
+            return new While(e, b);
         }
 
         Stmt.Var Variable(){

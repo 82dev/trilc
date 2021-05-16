@@ -21,6 +21,7 @@ namespace trilc
             {"ensure", TokenType.ENSURE},
             {"if", TokenType.IF},
             {"else", TokenType.ELSE},
+            {"while", TokenType.WHILE},
         };
         static char[] seps = " =+/-*!{}[]().;:\'\"<>\n".ToCharArray();
         static Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
@@ -179,12 +180,25 @@ namespace trilc
                             addToken(TokenType.Not, "!");
                             break;
                         }
+                        case '&':{
+                            if(expect(1, '&')){
+                                addToken(TokenType.And, "&&");
+                            }
+                            break;    
+                        }
+                        case '|':{
+                            if(expect(1, '|')){
+                                addToken(TokenType.Or, "||");
+                            }
+                            break;
+                        }
 
                         default:{
                             if(charTokenDict.ContainsKey(source[i])){
                                 addToken(charTokenDict[source[i]], source[i]);
                                 break;
                             }
+                            
                             break;
                         }
                     }

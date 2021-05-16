@@ -8,8 +8,7 @@ namespace trilc
 
         public void Check(List<Stmt> statements, ref bool error)
         {
-            int i = 0;
-            for (;i < statements.Count; i++)
+            for (int i = 0; i < statements.Count; i++)
             {
                 try
                 {
@@ -17,6 +16,7 @@ namespace trilc
                     if(statements[i] is Stmt.Block blockStmt){checkBlock(blockStmt, ref error);}
                     if(statements[i] is Stmt.ReAss reAss){checkReAss(reAss);}
                     if(statements[i] is Stmt.If ifS){checkIf(ifS, ref error);}
+                    if(statements[i] is Stmt.While whileS){checkWhile(whileS, ref error);}
                 }
                 catch (SemanticException)
                 {
@@ -31,6 +31,13 @@ namespace trilc
             environment = environment.enclosing;
         }
 
+        void checkWhile(Stmt.While whileS, ref bool err){
+            TrilType exprT = fromExpr(whileS.expr);
+            if(exprT != TrilType.@bool){
+                throw error("Expression must be a boolean!");
+            }
+            checkBlock(whileS.block, ref err);
+        }
         void checkVar(Stmt.Var varStmt)
         {
             TrilType tokT = fromToken(varStmt.type);

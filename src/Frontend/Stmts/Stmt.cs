@@ -17,6 +17,17 @@ namespace trilc
             }   
         }
 
+        public class While : Stmt{
+            public Expr expr;
+            public Block block;
+
+            public While(Expr e, Block b)
+            {
+                this.expr = e;
+                this.block = b;
+            }
+        }
+
         public class Var : Stmt{
             public string name;
             public Stmt.Expr value;

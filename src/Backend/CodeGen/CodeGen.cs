@@ -26,9 +26,22 @@ namespace trilc
                 if(stmt is Stmt.Block block){genBlock(block);}
                 if(stmt is Stmt.Var varStmt){genVar(varStmt);}
                 if(stmt is Stmt.ReAss reAss){genReAss(reAss);}
+                if(stmt is Stmt.While whileS){genWhile(whileS);}
             }
         }
 
+        void genWhile(Stmt.While whileS){
+            int doIndex = instructions.Count;
+            genExpr(whileS.expr);
+            emit(InstructionType.jfal, 0);
+            int b4 = instructions.Count;
+            genBlock(whileS.block);
+
+            instructions[b4 - 1] = new Instruction(InstructionType.jfal, 
+                (b4 + (instructions.Count - b4) + 2)
+            );
+            emit(jump, doIndex);
+        }
         void genIf(Stmt.If ifStmt){
             genExpr(ifStmt.expr);
             emit(InstructionType.jfal, 0);
@@ -36,15 +49,20 @@ namespace trilc
             genBlock(ifStmt.body);
             
             instructions[b4 - 1] = new Instruction(InstructionType.jfal, 
-                (b4 + (instructions.Count - b4) + 1)
+                (b4 + (instructions.Count - b4) + 2)
             );
+            emit(jump);
+            int elseJumpIndex = instructions.Count - 1;
             if(ifStmt.elseBlock != null){
                 genBlock(ifStmt.elseBlock);
             }
+            instructions[elseJumpIndex] = new Instruction(InstructionType.jump, 
+                (elseJumpIndex + (instructions.Count - elseJumpIndex) + 1)
+            );
         }
         void genReAss(Stmt.ReAss reAss){
             genExpr(reAss.value);
-            emit(InstructionType.load, variables[reAss.name]);
+            emit(InstructionType.store, variables[reAss.name]);
         }
         void genBlock(Stmt.Block block){
             int i = lastVarI;
@@ -74,6 +92,9 @@ namespace trilc
                     {TokenType.GreaterEq, InstructionType.greq},
                     {TokenType.Lesser, InstructionType.ls},
                     {TokenType.LesserEq, InstructionType.lseq},
+
+                    {TokenType.And, InstructionType.and},
+                    {TokenType.Or, InstructionType.or},
                 };
 
                 genExpr(bin.right);

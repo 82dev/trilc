@@ -1,11 +1,27 @@
-push 4
+push 5
 store 0
+push 6
+load 0
+ls
+ jfal 10
+    push 6
+    store 0
+ jump 26
+
 push 5
 load 0
+eq
+ jfal 24
+    push 0
+    load 0
 gr
-jfal 9
-push 5
+jfal 23
+push 1
 load 0
-push 3
-load 0
+sub
+store 0
+jump 13
+jump 26
+push 7
+store 0
 halt
