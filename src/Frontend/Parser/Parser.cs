@@ -60,16 +60,31 @@ namespace trilc
             }
             return cur.tokenType == type;
         }
-        bool expect(string error, params TokenType[] token){
+        bool expect(string msg, params TokenType[] token){
             if(!match(token)){
-                Error.assert(error);
-                throw new ParseException();
+                throw error(msg);
             }
             return true;
         }
 
         ParseException error(string err){
             Error.assert(err);
+            return new ParseException();
+        }
+
+        ParseException errorAt(string msg, Token tok){
+            string[] split = tok.line.Split(tok.value);
+            string indent = string.Empty;
+
+            for (int i = 0; i < (
+                (split[0].Length - 1)+
+                (tok.lineIndex.ToString().Length + 5)+
+                (tok.value.Length)
+            ); i++)
+            {
+                
+            }
+
             return new ParseException();
         }
 
@@ -116,23 +131,21 @@ namespace trilc
             {
                 if(match(ID)){
                     if(match(Colon) && (match(INT, BOOL))){
-                        return Variable();
+                        return varDec();
+                    }
+                    if(match(PlusEqual, MinusEqual, MulEqual, SlashEqual)){
+                        return desugarizeReAss();
                     }
                     if(match(Assignment)){
-                        return ReAss();
+                        return reAss();
                     }
                 }
-                if(match(TokenType.BlockStart)){
-                    return block();
-                }
-                if(match(TokenType.SemiColon)){
-                    return new Stmt.Empty();
-                }
-                if(match(TokenType.IF)){
-                    return ifStmt();
-                }
+                if(match(TokenType.BlockStart)){return block();}
+                if(match(TokenType.SemiColon)){return new Stmt.Empty();}
+                if(match(TokenType.IF)){return ifStmt();}
                 if(match(TokenType.WHILE)){return whileLoop();}
-                
+                if(match(TokenType.FN)){return fnDec();}
+
                 throw error($"Unrecognized token '{cur.tokenType}'!");
             }
             catch (ParseException)
@@ -140,6 +153,34 @@ namespace trilc
                 synchronize();
             }
             return null;
+        }
+
+        Stmt.FunctionDec fnDec(){
+            expect("Expect identifier after 'fn'", ID);
+            string name = previous().value;
+            expect($"Expect '(' after fn {name}", ParSta);
+            var par = param();
+            expect("Expect '{'!", BlockStart);
+            var b = block();
+            return new FunctionDec(name, b, par);
+        }
+
+        Var[] param(){
+            List<Var> vars = new List<Var>();
+            if(!check(TokenType.ParEnd)){
+                do
+                {
+                    if(match(ID)){
+                        if(match(Colon) && (match(INT, BOOL))){
+                            vars.Add(variable());
+                            continue;
+                        }
+                    }
+                    throw error("Expect variable after ','!");
+                }while (match(Comma));
+            }
+            match(ParEnd);
+            return vars.ToArray();
         }
 
         Stmt.While whileLoop(){
@@ -151,21 +192,44 @@ namespace trilc
             return new While(e, b);
         }
 
-        Stmt.Var Variable(){
+        Stmt.Var variable(){
             string n = peek(-3).value;
             Token t = previous();
             Expr e = null;
             if(match(Assignment)){
                 e = expr();
             }
-            expect("Expect ';'!", TokenType.SemiColon);
+            
             return new Stmt.Var(n,e,t);
         }
-        Stmt.ReAss ReAss(){
+
+        Stmt.Var varDec(){
+            var v = variable();
+            expect("Expect ';'!", TokenType.SemiColon);
+            return v;
+        }
+        Stmt.ReAss reAss(){
             string name = peek(-2).value;
             var e = expr();
             expect("Expect ';'!", SemiColon);
             return new ReAss(name, e);
+        }
+        Stmt.ReAss desugarizeReAss(){
+            Token op = previous();
+            string name = peek(-2).value;
+            var e = expr();
+            Dictionary<TokenType, TokenType> dict = new Dictionary<TokenType, TokenType>(){
+                {TokenType.PlusEqual, TokenType.Plus},
+                {TokenType.MinusEqual, TokenType.Minus},
+                {TokenType.MulEqual, TokenType.Asterisk},
+                {TokenType.SlashEqual, TokenType.Slash},
+            };
+            expect("Expect ';'!", SemiColon);
+            return new ReAss(name, new Expr.Binary(
+                l:(new Expr.Literal<string>.varLiteral(name)),
+                o:(new Token(dict[op.tokenType], op.value.TrimEnd('='), op.lineIndex, op.charIndex, op.line)),
+                e
+            ));
         }
 
         Stmt.If ifStmt(){

@@ -14,19 +14,19 @@ namespace trilc
         //Literal
         ID, NUM, String,
 
-        Dot,
+        Comma,
         SemiColon,
         Colon,
-        Plus,Increase,
-        Minus,Decrease,
+        Plus,Increase, PlusEqual,
+        Minus,Decrease, MinusEqual,
+        Asterisk, MulEqual,
+        Slash, SlashEqual,
         //=
         Assignment,
-        Asterisk,
-        Slash,
+        
         
         //Pairs
         BlockStart, BlockEnd,
-        ComStart, ComEnd,
         ArrSta, ArrEnd,
         ParSta, ParEnd,
 
@@ -34,6 +34,6 @@ namespace trilc
         Equal, NotEqual, Not, TRUE, FALSE, Greater, GreaterEq, Lesser, LesserEq, And, Or,
 
         //Keywords
-        USE, VOID, INT, BOOL, FUNC, ENSURE, IF, ELSE, WHILE,
+        USE, VOID, INT, BOOL, FN, ENSURE, IF, ELSE, WHILE,
     }
 }

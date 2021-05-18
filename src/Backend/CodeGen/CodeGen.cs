@@ -31,12 +31,11 @@ namespace trilc
         }
 
         void genWhile(Stmt.While whileS){
-            int doIndex = instructions.Count;
+            int doIndex = instructions.Count + 1;
             genExpr(whileS.expr);
             emit(InstructionType.jfal, 0);
             int b4 = instructions.Count;
-            genBlock(whileS.block);
-
+            genBlock(whileS.body);
             instructions[b4 - 1] = new Instruction(InstructionType.jfal, 
                 (b4 + (instructions.Count - b4) + 2)
             );

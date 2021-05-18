@@ -17,14 +17,27 @@ namespace trilc
             }   
         }
 
+        public class FunctionDec : Stmt{
+            public string name;
+            public Block body;
+            public Var[] param;
+
+            public FunctionDec(string n, Block b, params Var[] p)
+            {
+                this.name = n;
+                this.body = b;
+                this.param = p;
+            }
+        }
+
         public class While : Stmt{
             public Expr expr;
-            public Block block;
+            public Block body;
 
             public While(Expr e, Block b)
             {
                 this.expr = e;
-                this.block = b;
+                this.body = b;
             }
         }
 

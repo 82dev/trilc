@@ -4,6 +4,21 @@ namespace trilc
 
     class Error
     {
+        public static void formatStr(params object[] objs)
+        {
+            foreach(var o in objs){
+                if(o == null){
+                    Console.ResetColor();
+                }
+                else if(o is ConsoleColor cc){
+                    Console.ForegroundColor = cc;
+                }
+                else{
+                    Console.Write(o.ToString());
+                }
+            }
+        }
+
         public static void assert(string str){
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(str);

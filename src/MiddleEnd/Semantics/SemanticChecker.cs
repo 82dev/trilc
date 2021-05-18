@@ -36,7 +36,7 @@ namespace trilc
             if(exprT != TrilType.@bool){
                 throw error("Expression must be a boolean!");
             }
-            checkBlock(whileS.block, ref err);
+            checkBlock(whileS.body, ref err);
         }
         void checkVar(Stmt.Var varStmt)
         {

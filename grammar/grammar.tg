@@ -1,15 +1,19 @@
 program ]> stmt* EOF
 
 stmt ]> block
-     |  var
+     |  varDec
      |  reAss
      |  if
      |  while
      |  ';'
 
+fnDec ]> 'fn' ID '(' params? ')' block
+params]> var (',' var)*
+
 while ]> 'while' '('expr')' block
 
-var ]> ID ':' (INT | BOOL) ('=' expr)? ';'
+var ]> ID ':' (INT | BOOL) ('=' expr)? 
+varDec ]> var ';'
 reAss ]> ID '=' expr ';'
 
 if ]> 'if''(' expr ')' block (else)?

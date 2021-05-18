@@ -1,15 +1,1 @@
-x: int = 5;
-
-if(x < 6){
-    x = 6;
-}
-else{
-    if(x == 5){
-        while(x > 0){
-            x = x - 1;
-        }
-    }
-    else{
-        x = 7;
-    }
-}
+x: int = "aa

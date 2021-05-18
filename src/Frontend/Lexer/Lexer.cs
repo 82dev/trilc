@@ -14,7 +14,7 @@ namespace trilc
             {"use", TokenType.USE},
             {"true", TokenType.TRUE},
             {"false", TokenType.FALSE},
-            {"fn", TokenType.FUNC},
+            {"fn", TokenType.FN},
             {"void", TokenType.VOID},
             {"int", TokenType.INT},
             {"bool", TokenType.BOOL},
@@ -23,7 +23,7 @@ namespace trilc
             {"else", TokenType.ELSE},
             {"while", TokenType.WHILE},
         };
-        static char[] seps = " =+/-*!{}[]().;:\'\"<>\n".ToCharArray();
+        static char[] seps = " =+/-*!{}[](),;:\'\"\n".ToCharArray();
         static Dictionary<char, TokenType> charTokenDict = new Dictionary<char, TokenType>(){
             {'{', TokenType.BlockStart},
             {'}', TokenType.BlockEnd},
@@ -33,18 +33,23 @@ namespace trilc
             {')', TokenType.ParEnd},
             {';', TokenType.SemiColon},
             {':', TokenType.Colon},
-            {'*', TokenType.Asterisk},
-            {'.', TokenType.Dot},
+            {',', TokenType.Comma},
         };
 
         int lineIndex = 0;
         short charIndex = 0;
+        string[] lines;
         List<Token> tokens = new List<Token>();
 
         public Token[] lex(string source){
             string buffer = string.Empty;
-
+            lines = source.Split('\n');
             int i = 0;
+
+            void newline(){
+                lineIndex++;
+                charIndex = 0;
+            }
 
             char peek(int j) => source[i + 1];
             bool expect(int j, char c){
@@ -90,11 +95,14 @@ namespace trilc
                     switch (source[i])
                     {
                         case '\n':{
-                            lineIndex++;
-                            charIndex = 0;
+                            newline();
                             break;
                         }
-                        case '+':{ 
+                        case '+':{
+                            if(expect(1, '=')){
+                                addToken(TokenType.PlusEqual, "+=");
+                                break;
+                            }
                             if(expect(1, '+')){
                                 addToken(TokenType.Increase, "++");
                                 break;
@@ -103,6 +111,10 @@ namespace trilc
                             break;
                         }
                         case '-':{ 
+                            if(expect(1, '=')){
+                                addToken(TokenType.MinusEqual, "-=");
+                                break;
+                            }
                             if(expect(1, '-')){
                                 addToken(TokenType.Decrease, "--");
                                 break;
@@ -118,7 +130,19 @@ namespace trilc
                             addToken(TokenType.Assignment, "=");
                             break;
                         }
+                        case '*':{
+                            if(expect(1, '=')){
+                                addToken(TokenType.MulEqual, "*=");
+                                break;
+                            }
+                            addToken(TokenType.Asterisk, "*");
+                            break;
+                        }
                         case '/':{
+                            if(expect(1, '=')){
+                                addToken(TokenType.SlashEqual, "/=");
+                                break;
+                            }
                             if(expect(1, '/')){
                                 int tmp = i;
                                 while (tmp < source.Length && source[tmp] != '\n')
@@ -134,12 +158,37 @@ namespace trilc
                         case '\"':{
                             string tmp = string.Empty;
                             int j = i+1;
+
+                            void err(){
+                                string[] qouteSplit = lines[lineIndex - 1].Split('\"');
+                                string indent = string.Empty;
+                                for (int k = 0;
+                                    k < 
+                                        (qouteSplit[0].Length )+
+                                        (lineIndex.ToString().Length + 5)
+                                        ;
+                                    k++)
+                                {
+                                    indent += " ";
+                                }
+                                Error.formatStr($"{lineIndex }|    {qouteSplit[0]}",
+                                                ConsoleColor.DarkRed, "\"",
+                                                null, qouteSplit[1],
+                                                "\n",
+                                                ConsoleColor.Red,
+                                                indent, "↑","\n",
+                                                "Unclosed string here.",
+                                                "\n"
+                                            );
+                            }
+
                             try
                             {
                                 while ((source[j] != '\"'))
                                 {
                                     if(source[j] == '\n'){
-                                        Error.assert("Unclosed string!");
+                                        newline();
+                                        err();
                                         goto Done;
                                     }
                                     tmp += source[j];
@@ -148,7 +197,8 @@ namespace trilc
                             }
                             catch (IndexOutOfRangeException)
                             {
-                                Error.assert("Unclosed string!");
+                                newline();
+                                err();
                                 goto Done;
                             }
                                 
@@ -241,14 +291,14 @@ namespace trilc
 
         #region AddToken
             private void addToken(TokenType tokenType, char v){
-                tokens.Add(new Token(tokenType, v.ToString(), (Int16)(lineIndex + 1), (short)(charIndex+1)));
+                tokens.Add(new Token(tokenType, v.ToString(), (Int16)(lineIndex + 1), (short)(charIndex+1), lines[lineIndex != 0 ?(lineIndex-1): 0]));
             }
             private void addToken(TokenType tokenType, string v){
-                tokens.Add(new Token(tokenType, v, (Int16)(lineIndex + 1), (short)(charIndex+1)));
+                tokens.Add(new Token(tokenType, v, (Int16)(lineIndex + 1), (short)(charIndex+1), lines[lineIndex != 0 ?(lineIndex-1): 0]));
             }
-            private void addToken(TokenType tokenType){
-                tokens.Add(new Token(tokenType, (Int16)(lineIndex + 1), (short)(charIndex+1)));
-            }
+            // private void addToken(TokenType tokenType){
+            //     tokens.Add(new Token(tokenType, (Int16)(lineIndex + 1), (short)(charIndex+1)));
+            // }
         #endregion
     }
 }
