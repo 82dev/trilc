@@ -31,7 +31,7 @@ namespace trilc
         ParSta, ParEnd,
 
         //Booleans
-        Equal, NotEqual, Not, TRUE, FALSE, Greater, GreaterEq, Lesser, LesserEq, And, Or,
+        Equal, NotEqual, Not, TRUE, FALSE, Greater, GreaterEq, Lesser, LesserEq,
 
         //Keywords
         USE, VOID, INT, BOOL, FN, ENSURE, IF, ELSE, WHILE,

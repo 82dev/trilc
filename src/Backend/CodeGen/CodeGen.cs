@@ -92,8 +92,8 @@ namespace trilc
                     {TokenType.Lesser, InstructionType.ls},
                     {TokenType.LesserEq, InstructionType.lseq},
 
-                    {TokenType.And, InstructionType.and},
-                    {TokenType.Or, InstructionType.or},
+                    // {TokenType.And, InstructionType.and},
+                    // {TokenType.Or, InstructionType.or},
                 };
 
                 genExpr(bin.right);

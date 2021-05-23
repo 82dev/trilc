@@ -47,4 +47,15 @@ namespace trilc
             System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
+
+    [System.Serializable]
+    public class LexicalException : System.Exception
+    {
+        public LexicalException() { }
+        public LexicalException(string message) : base(message) { }
+        public LexicalException(string message, System.Exception inner) : base(message, inner) { }
+        protected LexicalException(
+            System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+    }
 }

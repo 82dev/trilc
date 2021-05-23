@@ -70,7 +70,7 @@ namespace trilc
             }
             #endregion
 
-            Token[] tokens = new Lexer().lex(fileText.Replace("\r", string.Empty));
+            Token[] tokens = new Lexer(fileText).lex(out hadError);
             stopwatch.Stop();
             Debug.assert($"Lexer finished in {stopwatch.ElapsedMilliseconds}ms");
             stopwatch = Stopwatch.StartNew();
