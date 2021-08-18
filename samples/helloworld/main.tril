@@ -1,5 +1,0 @@
-//comment
-
-main: null = fn(cmdargs: [string]){
-    System.Output.Console.WriteLine("Hello World from Tril !");
-}

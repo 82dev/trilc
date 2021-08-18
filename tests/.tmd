@@ -1,6 +1,0 @@
-{
-    "entryfile":"main",
-    "deps":[
-        "stdlib"
-    ]
-}
