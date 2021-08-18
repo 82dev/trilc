@@ -3,19 +3,19 @@
 
 #include "includes.h"
 
-enum TokenType{
+typedef enum{
     EOF_TT,
-
     ID_TT
-};
+} TokenType;
 
-typedef struct Token
+typedef struct
 {
     int col, line;
     char *value;
     TokenType type;
     char *file;
-};
+}Token;
 
+Token* createToken(int col, int line, char *value, TokenType type, char *file);
 
 #endif
