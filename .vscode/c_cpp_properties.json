@@ -4,8 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${default}",
-                "C:\\MinGW\\include",
-                "${workspaceFolder}\\src"
+                "C:/MinGW/include",
+                "${workspaceFolder}/external",
+                "${workspaceFolder}/src"
             ],
             "defines": [
                 "_DEBUG",

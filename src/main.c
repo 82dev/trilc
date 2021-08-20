@@ -1,10 +1,10 @@
 #include "includes.h"
 #include "Token.h"
+#include "libtermcolor\termcolor.h"
 
 int main(int argc, char const *argv[])
 {
-    Token *token = createToken(0, 0, "\0", EOF_TT, "hello");
+    tcol_printf("{R}Hello {B}World{W}!");
     getchar();
-    free(token);
     return 0;
 }
