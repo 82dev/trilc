@@ -33,7 +33,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}\\bin\\trilc.exe",
-            "args": [],
+            "args": ["test.tril"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
