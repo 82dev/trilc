@@ -11,7 +11,7 @@ Block:
         //
     }
 Arithmetic Operators:
-    + - / *
+    + - / *     
 Logic Operators:
     == != < > <= >= && || !
 Bitwise Operators:
@@ -32,12 +32,6 @@ If_then_else:
     }else{
         
     }
-Switch:
-    switch(....){
-        case .. :>
-        case .. :>
-        else :>
-    }
 While:
     while(....){
 
@@ -46,3 +40,9 @@ Do_while:
     do{
 
     }while(....)
+Switch:
+    switch(....){
+        case .. :>
+        case .. :>
+        else :>
+    }

@@ -1,0 +1,32 @@
+stmt = block
+     | (decl ';')
+     | assign
+     | if
+     | while
+     | doWhile
+     | (fCall ';')
+     | fDef
+
+block = '{' stmt* '}'
+decl = ID ':' ID
+assign = ID '=' expr ';'
+
+expr = term
+term = factor ('+'|'-' factor)*
+     | factor
+factor = unary ('*'|'/' unary)*
+       | primary
+unary = '-' primary
+      | primary
+primary = NUM |ID | fCall
+
+if = 'if' '(' logExpr ')' block ('else' block)?
+
+logExpr = logTerm LOG_OP logTerm
+logTerm = '!'* expr
+
+while = 'while' '(' logExpr ')' block
+doWhile = 'do' block 'while' '(' logExpr ')'
+fCall = ID '(' paramList ')'
+paramList = decl? (',' decl)*
+fDef = fCall ':' ID? block
