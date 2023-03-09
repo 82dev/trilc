@@ -174,6 +174,7 @@ impl Lexer{
   }
 
   fn is_at_end(&self) -> bool{
-    self.current >= self.source.len() - 1
+    //TODO: ??? should be - 1 no??
+    self.current >= self.source.len() 
   }
 }
