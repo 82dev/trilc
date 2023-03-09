@@ -7,6 +7,20 @@ pub enum TokenKind{
 
   Number(i32),
 
+  Subtract,
+  Plus,
+  Asterisk,
+  Slash,
+
+  Assignment,
+  
+  CompEquality,
+
+  AssignmentAdd,
+  AssignmentSubtract,
+  AssignmentMultiply,
+  AssignmentDivide,
+
   BraceOpen,
   BraceClose,
 

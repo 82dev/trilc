@@ -1,4 +1,6 @@
-use crate::token::{Token, TokenKind};
+use std::{num, ops::Neg};
+
+use crate::token::{Token, TokenKind, self};
 
 pub struct Lexer{
   source: Vec<char>,
@@ -31,6 +33,56 @@ impl Lexer{
           self.col = 0;
         },
 
+        '/' => {
+          if self.match_next('/'){
+            while self.peek_next() != '\n'{
+              self.advance();
+            }
+          }
+          else if self.match_next('='){
+            tokens.push(self.new_token(TokenKind::AssignmentDivide));
+          }
+          else {
+            tokens.push(self.new_token(TokenKind::Slash));
+          }
+        },
+
+        '-' => {
+          if self.match_next('='){
+            tokens.push(self.new_token(TokenKind::AssignmentSubtract));
+          }
+          else{
+            tokens.push(self.new_token(TokenKind::Subtract));
+          }
+        }
+
+        '+' => {
+          if self.match_next('='){
+            tokens.push(self.new_token(TokenKind::AssignmentAdd));
+          }
+          else{
+            tokens.push(self.new_token(TokenKind::Plus));
+          }
+        }
+
+        '*' => {
+          if self.match_next('='){
+            tokens.push(self.new_token(TokenKind::AssignmentMultiply));
+          }
+          else{
+            tokens.push(self.new_token(TokenKind::Asterisk));
+          }
+        }
+
+        '=' => {
+          if self.match_next('='){
+            tokens.push(self.new_token(TokenKind::CompEquality));
+          }
+          else {
+            tokens.push(self.new_token(TokenKind::Assignment));
+          }
+        }
+
         '{' => tokens.push(self.new_token(TokenKind::BraceOpen)),
         '}' => tokens.push(self.new_token(TokenKind::BraceClose)),
 
@@ -54,8 +106,7 @@ impl Lexer{
           }
         }
       }
-      self.col += 1;
-      self.current += 1;
+      self.advance();
       self.start = self.current;
     }
 
@@ -66,8 +117,7 @@ impl Lexer{
 
   fn identifier(&mut self) -> Token{
     while !self.is_at_end() && self.source[self.current].is_alphabetic(){
-      self.col += 1;
-      self.current += 1;
+      self.advance();
     }
 
     let s = String::from_iter(self.source[self.start..self.current].iter());
@@ -77,16 +127,46 @@ impl Lexer{
   }
 
   fn number(&mut self) -> Token{
-    while !self.is_at_end() && self.source[self.current].is_ascii_digit(){
+    while !self.is_at_end() && self.source[self.current].is_ascii_digit() {
+      //TODO: Im high in all ways but medical
+      //if self.peek_next() != '\n' {self.advance();}
+      if self.peek_next() == '\n'{
+        break
+      }
+      self.advance()
+    }
+    self.new_token(
+      TokenKind::Number(
+        self.source[self.start..self.current]
+          .iter()
+          .collect::<String>()
+          .parse()
+          .expect("Couldnt parse string.")
+      )
+    )
+  }
+
+  fn match_next(&mut self, c: char) -> bool{
+    if self.peek_next() == c{
+      self.advance();
+      return true 
+    }
+    false
+  }
+
+  fn peek_next(&mut self) -> char{
+    if self.current == self.source.len() - 1{
+      return self.source[self.current]
+    }else{
+      self.source[self.current + 1]
+    }
+  }
+
+  fn advance(&mut self){
+    if !self.is_at_end(){
       self.col += 1;
       self.current += 1;
     }
-    let s = String::from_iter(self.source[self.start..self.current].iter());
-    if let Ok(i) = s.parse::<i32>(){
-      return self.new_token(TokenKind::Number(i))
-    }
-    //TODO: Error management in lexer
-    self.new_token(TokenKind::Unexpected)
   }
 
   fn new_token(&mut self, kind: TokenKind) -> Token{
@@ -94,6 +174,6 @@ impl Lexer{
   }
 
   fn is_at_end(&self) -> bool{
-    self.current >= self.source.len()
+    self.current >= self.source.len() - 1
   }
 }

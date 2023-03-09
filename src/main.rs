@@ -1,10 +1,10 @@
+use lexer::Lexer;
+
 mod token;
 mod lexer;
-
-use lexer::*;
+mod parser;
 
 fn main(){
-  //TODO: fuck trhis shirt
   let mut lexer = Lexer::new(include_str!("test.tril").chars().collect());
   println!("{:?}", lexer.tokenize());
 }
