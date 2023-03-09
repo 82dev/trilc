@@ -1,8 +1,11 @@
-#[derive(Debug)]
-pub enum TokenType{
-  Identifier,
+use std::fmt::Debug;
 
-  NumberLiteral,
+#[derive(Debug)]
+#[derive(PartialEq)]
+pub enum TokenKind{
+  Identifier(String),
+
+  Number(i32),
 
   BraceOpen,
   BraceClose,
@@ -17,17 +20,24 @@ pub enum TokenType{
   Unexpected,
 }
 
-#[derive(Debug)]
 pub struct Token{
-  token_type: TokenType,
-  line: u32,
+  pub kind: TokenKind,
+  pub line: usize,
+  pub col: usize,
 }
 
 impl Token{
-  pub fn new(token_type: TokenType, line: u32) -> Token{
+  pub fn new(kind: TokenKind, line: usize, col: usize) -> Token{
     Token{
-      token_type,
+      kind,
       line,
+      col,
     }
+  }
+}
+
+impl Debug for Token{
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    write!(f, "Token: [Kind: {:?}, Line: {}, Column: {}]\n", self.kind, self.line, self.col)
   }
 }

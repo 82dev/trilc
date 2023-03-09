@@ -1,7 +1,10 @@
 mod token;
 mod lexer;
 
+use lexer::*;
+
 fn main(){
-  let test_string = String::from("; \n ;;");
-  println!("{:?}", lexer::tokenize(test_string.chars().collect()));
+  //TODO: fuck trhis shirt
+  let mut lexer = Lexer::new(include_str!("test.tril").chars().collect());
+  println!("{:?}", lexer.tokenize());
 }
